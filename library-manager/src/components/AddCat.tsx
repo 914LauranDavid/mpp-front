@@ -1,16 +1,15 @@
-import { Box, Button, Divider, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
-
-let nextId = 3;
+import { Cat } from "../model/Cat";
 
 function AddCat({
-  allCats,
-  setAllCats,
+  getAllCats,
+  addCat,
 }: {
-  allCats: any[];
-  setAllCats: React.Dispatch<React.SetStateAction<any[]>>;
-}) {  // TODO use Cat interface instead of any?
+  getAllCats: () => Cat[];
+  addCat: (cat: Cat) => void;
+}) { 
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
@@ -18,9 +17,13 @@ function AddCat({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    setAllCats([...allCats, { id: nextId, name: name, age: age, weight: weight }]);
-    nextId++;
-    // allCats.push(createCat(nextId));
+    let maximumId = 0;
+    getAllCats().forEach(cat => {
+      if (cat.id > maximumId)
+        maximumId = cat.id;
+    });  // TODO search for ID in addCat 
+
+    addCat({id: maximumId + 1,  name: name, age: age, weight: weight})
   };
 
   return (

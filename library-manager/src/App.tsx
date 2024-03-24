@@ -1,55 +1,37 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import "./ElementList";
-import ElementList from "./ElementList";
+import "./components/AllCats";
+import AllCats from "./components/AllCats";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import { Box } from "@mui/material";
-import AddCat from "./AddCat";
-import CatDetails from "./CatDetails";
+import AddCat from "./components/AddCat";
+import CatDetails from "./components/CatDetails";
+import { startCatRepository } from "./repository/CatRepository";
 
-// interface Cat {
-//   id: number;
-//   name: string;
-//   age: number;
-//   weight: number;
-// }
-
-// interface Cats extends Array<Cat> {}
 
 function App() {
-  const [allCats, setAllCats] = useState<any[]>([
-    { id: 1, name: "Sofia", age: 2, weight: 2.3 },
-    { id: 2, name: "Raymond", age: 5, weight: 3.8 },
-  ]);
+  const { getAllCats, getCatById, addCat, deleteCat, updateCat } = startCatRepository();
 
   return (
     <BrowserRouter>
       <ul>
-        {/* <li>
-          <Link to="/">Front Page</Link>
-        </li> */}
         <li>
-          <Link to="/cats">I wish to see the list of cats</Link>
+          <Link to="/cats">All cats</Link>
         </li>
         <li>
-          <Link to="/cat/add">Add cat</Link>
+          <Link to="/cat/add">Add a new cat</Link>
         </li>
       </ul>
       <Routes>
-        {/* <Route path="/" element={} /> */}
         <Route
           path="/cats"
-          element={<ElementList allCats={allCats} setAllCats={setAllCats} />}
+          element={<AllCats getAllCats={getAllCats} deleteCat={deleteCat} />}
         />
         <Route
           path="/cat/add"
-          element={<AddCat allCats={allCats} setAllCats={setAllCats} />}
+          element={<AddCat getAllCats={getAllCats} addCat={addCat} />}
         />
         <Route
           path="/cats/:id"
-          element={<CatDetails allCats={allCats} setAllCats={setAllCats} />}
+          element={<CatDetails getCatById={getCatById} updateCat={updateCat} />}
         />
       </Routes>
     </BrowserRouter>
