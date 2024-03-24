@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Cat } from "../model/Cat";
+import EditIcon from '@mui/icons-material/Edit';
 
 function CatDetails({
   getCatById,
@@ -29,7 +30,7 @@ function CatDetails({
   const handleNewNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    updateCat(cat.id, {id: cat.id, name: nameInput, age: cat.age, weight: cat.weight});
+    updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
     cat = getCatById(cat.id);  // TODO see if this is ok
   };
 
@@ -39,7 +40,7 @@ function CatDetails({
 
     cat.age = ageInput;
 
-    updateCat(cat.id, {id: cat.id, name: cat.name, age: ageInput, weight: cat.weight});
+    updateCat(cat.id, { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
     cat = getCatById(cat.id);  // TODO see if this is ok
   };
 
@@ -49,20 +50,28 @@ function CatDetails({
 
     cat.weight = weightInput;
 
-    updateCat(cat.id, {id: cat.id, name: cat.name, age: cat.age, weight: weightInput});
+    updateCat(cat.id, { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
     cat = getCatById(cat.id);  // TODO see if this is ok
   };
 
+  const [isNameInputShown, setIsNameInputShown] = useState(false);
+  const [isAgeInputShown, setIsAgeInputShown] = useState(false);
+  const [isWeightInputShown, setIsWeightInputShown] = useState(false);
+
   return (
-    <TableContainer>
+    <TableContainer sx={{ bgcolor: '#f8faca' }}>
       <Table sx={{ minWidth: "50%" }}>
         <TableBody>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>{cat.name}</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
+            <TableCell sx={{ fontStyle: 'italic' }}>{cat.name}</TableCell>
             <TableCell>
-              <form onSubmit={handleNewNameSubmit}>
+              <Button onClick={() => setIsNameInputShown(!isNameInputShown)}>
+                <EditIcon />
+              </Button>
+              {isNameInputShown && <form onSubmit={handleNewNameSubmit}>
                 <TextField
+                  size="small"
                   id="nameInput"
                   placeholder="New name"
                   value={nameInput}
@@ -71,15 +80,19 @@ function CatDetails({
                 <Button type="submit">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
-              </form>
+              </form>}
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Age</TableCell>
-            <TableCell>{cat.age}</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}>Age</TableCell>
+            <TableCell sx={{ fontStyle: 'italic' }}>{cat.age}</TableCell>
             <TableCell>
-              <form onSubmit={handleNewAgeSubmit}>
+              <Button onClick={() => setIsAgeInputShown(!isAgeInputShown)}>
+                <EditIcon />
+              </Button>
+              {isAgeInputShown && <form onSubmit={handleNewAgeSubmit}>
                 <TextField
+                  size="small"
                   id="ageInput"
                   placeholder="New age"
                   inputProps={{ type: "number" }}
@@ -89,15 +102,19 @@ function CatDetails({
                 <Button type="submit">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
-              </form>
+              </form>}
             </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Weight</TableCell>
-            <TableCell>{cat.weight}</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}>Weight</TableCell>
+            <TableCell sx={{ fontStyle: 'italic' }}>{cat.weight}</TableCell>
             <TableCell>
-              <form onSubmit={handleNewWeightSubmit}>
+              <Button onClick={() => setIsWeightInputShown(!isWeightInputShown)}>
+                <EditIcon />
+              </Button>
+              {isWeightInputShown && <form onSubmit={handleNewWeightSubmit}>
                 <TextField
+                  size="small"
                   id="weightnput"
                   placeholder="New weight"
                   inputProps={{ type: "number", step: "0.1" }}
@@ -107,7 +124,7 @@ function CatDetails({
                 <Button type="submit">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
-              </form>
+              </form>}
             </TableCell>
           </TableRow>
         </TableBody>

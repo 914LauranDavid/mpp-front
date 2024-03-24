@@ -1,10 +1,11 @@
 import "./App.css";
 import "./components/AllCats";
 import AllCats from "./components/AllCats";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AddCat from "./components/AddCat";
 import CatDetails from "./components/CatDetails";
 import { startCatRepository } from "./repository/CatRepository";
+import NavigationBar from "./components/NavigationBar";
 
 
 function App() {
@@ -12,14 +13,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <ul>
-        <li>
-          <Link to="/cats">All cats</Link>
-        </li>
-        <li>
-          <Link to="/cat/add">Add a new cat</Link>
-        </li>
-      </ul>
+      <NavigationBar />
       <Routes>
         <Route
           path="/cats"

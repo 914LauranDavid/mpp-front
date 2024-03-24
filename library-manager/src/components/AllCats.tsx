@@ -16,21 +16,24 @@ function CatsTable({ getAllCats, deleteCat }: { getAllCats: () => Cat[]; deleteC
   return (
     <TableContainer>
       <Table sx={{ minWidth: "50%" }}>
-        <TableHead>
+        <TableHead >
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Age</TableCell>
-            <TableCell>Delete</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}>Age</TableCell>
+            <TableCell sx={{ fontWeight: 800, }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {getAllCats().map((cat) => (
             <TableRow key={cat.id}>
-              <TableCell>
+              <TableCell sx={{ fontStyle: 'italic' }}>
                 <Link to={`/cats/${cat.id}`}>{cat.name}</Link>
               </TableCell>
               <TableCell>{cat.age}</TableCell>
-              <TableCell><DeleteForeverIcon sx={{ cursor: 'pointer' }} onClick={() => deleteCat(cat.id)} /></TableCell>
+              <TableCell>
+                <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
+                  onClick={() => deleteCat(cat.id)} aria-label={`deleteIcon${cat.id}`} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -48,7 +51,7 @@ function AllCats({ getAllCats, deleteCat }: {
   // fara persistenta
   // testare (unit tests), validare
   return (
-    <Box>
+    <Box sx={{ bgcolor: '#f8faca' }}>
       <CatsTable getAllCats={getAllCats} deleteCat={deleteCat} />
       <Divider />
     </Box>
