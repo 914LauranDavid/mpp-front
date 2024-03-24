@@ -10,14 +10,12 @@ function AddCat({
 }: {
   allCats: any[];
   setAllCats: React.Dispatch<React.SetStateAction<any[]>>;
-}) {
+}) {  // TODO use Cat interface instead of any?
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
 
   const handleSubmit = (e: React.FormEvent) => {
-    alert("congratulations for submitting");
-
     e.preventDefault();
 
     setAllCats([...allCats, { id: nextId, name: name, age: age, weight: weight }]);

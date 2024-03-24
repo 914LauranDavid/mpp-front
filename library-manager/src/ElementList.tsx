@@ -26,6 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
 import { Link } from "react-router-dom";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 // function createCat(id: number, name: string, age: number, weight: number) {
 //   return { id, name, age, weight };
@@ -53,15 +54,21 @@ import { Link } from "react-router-dom";
 //   allCats: Cats;
 // }
 
-function EntitiesTable({ allCats }: { allCats: any[] }) {
+function EntitiesTable({ allCats, setAllCats }: { allCats: any[]; setAllCats: React.Dispatch<React.SetStateAction<any[]>> }) {
+  function deleteCat(catId: number) {
+    const newAllCats = allCats.filter(cat => cat.id !== catId);
+    setAllCats(newAllCats);
+  }
+
   return (
     <TableContainer>
-      <Table sx={{ minWidth: "50%" }}>
+        <Table sx={{ minWidth: "50%" }}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell>Age</TableCell>
             <TableCell>Weight</TableCell>
+            <TableCell>Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -72,6 +79,7 @@ function EntitiesTable({ allCats }: { allCats: any[] }) {
               </TableCell>
               <TableCell>{cat.age}</TableCell>
               <TableCell>{cat.weight}</TableCell>
+              <TableCell><DeleteForeverIcon sx={{cursor: 'pointer'}} onClick={() => deleteCat(cat.id)}/></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -110,7 +118,7 @@ function ElementList({
         <OneListElement name="First item" />
         <OneListElement name="Second item" />
       </List> */}
-      <EntitiesTable allCats={allCats} />
+      <EntitiesTable allCats={allCats} setAllCats={setAllCats} />
 
       <Divider />
     </Box>
