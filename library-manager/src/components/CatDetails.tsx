@@ -30,6 +30,11 @@ function CatDetails({
   const handleNewNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (nameInput === "") {
+      alert('Name cannot be empty');
+      return;
+    }
+
     updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
     cat = getCatById(cat.id);  // TODO see if this is ok
   };
