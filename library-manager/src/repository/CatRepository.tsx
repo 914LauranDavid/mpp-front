@@ -36,5 +36,9 @@ export const startCatRepository = () => {
         }));
     }
 
-    return { getAllCats, getCatById, addCat, deleteCat, updateCat };
+    const setAll = (newCats: Cat[]) => {
+        setAllCats([...newCats]);
+    }
+
+    return { getAllCats, getCatById, addCat, deleteCat, updateCat, setAll };
 }

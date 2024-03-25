@@ -6,10 +6,11 @@ import AddCat from "./components/AddCat";
 import CatDetails from "./components/CatDetails";
 import { startCatRepository } from "./repository/CatRepository";
 import NavigationBar from "./components/NavigationBar";
+import AgeDistribution from "./components/AgeDistribution";
 
 
 function App() {
-  const { getAllCats, getCatById, addCat, deleteCat, updateCat } = startCatRepository();
+  const { getAllCats, getCatById, addCat, deleteCat, updateCat, setAll } = startCatRepository();
 
   return (
     <BrowserRouter>
@@ -17,7 +18,7 @@ function App() {
       <Routes>
         <Route
           path="/cats"
-          element={<AllCats getAllCats={getAllCats} deleteCat={deleteCat} />}
+          element={<AllCats getAllCats={getAllCats} deleteCat={deleteCat} setAll={setAll} />}
         />
         <Route
           path="/cat/add"
@@ -26,6 +27,10 @@ function App() {
         <Route
           path="/cats/:id"
           element={<CatDetails getCatById={getCatById} updateCat={updateCat} />}
+        />
+        <Route
+          path="/cat/age_distribution"
+          element={<AgeDistribution getAllCats={getAllCats} />}
         />
       </Routes>
     </BrowserRouter>

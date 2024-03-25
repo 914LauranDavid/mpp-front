@@ -31,6 +31,11 @@ function NavigationBar() {
                                 Add a new cat
                             </Button>
                         </Link>
+                        <Link to="/cat/age_distribution">
+                            <Button sx={{ my: 2, color: 'black', display: 'block', fontWeight: 700 }}>
+                                Age distribution
+                            </Button>
+                        </Link>
                     </Box>
                 </Toolbar>
             </Container>
