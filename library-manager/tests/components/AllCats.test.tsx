@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import AllCats from '../../src/components/AllCats';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { Cat } from "../../src/model/Cat"
+import { Cat } from "../../src/domain/Cat"
 
 describe('AllCats', () => {
     let allCats = [{ id: 1, name: "Ana", age: 5, weight: 1.3 }, { id: 2, name: "Andrei", age: 3, weight: 2.3 }];

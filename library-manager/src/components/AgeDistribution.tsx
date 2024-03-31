@@ -1,11 +1,10 @@
 import { PieChart } from "@mui/x-charts";
-import { Cat } from "../model/Cat";
 import { Box } from "@mui/material";
 import { useCatStore } from "../stores/CatStore";
 import { useEffect } from 'react';
 
 function AgeDistribution() {
-    const { allCats, fetch } = useCatStore();
+    const { catsOnPage: allCats, fetch } = useCatStore();
 
     useEffect(() => {
         fetch("asc", 0);

@@ -2,7 +2,6 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableRow, TextFiel
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Cat } from "../model/Cat";
 import EditIcon from '@mui/icons-material/Edit';
 import { useCatStore } from "../stores/CatStore";
 
@@ -17,19 +16,13 @@ function CatDetails() {
   }
 
   const [cat, setCat] = useState({ id: -1, name: "", age: -1, weight: -1 });
-  // const cat = allCats.find((cat) => cat.id === parseInt(id));
 
   useEffect(() => {
     getCatById(parseInt(id)).then(received => setCat(received));
-    console.log("useEffect cat: " + cat.age);
   }, []);
 
-  // if (cat.id === -1) {
-  //   return <h1>No cat with this id.</h1>;
-  // }
-
   const [nameInput, setNameInput] = useState("");
-  const handleNewNameSubmit = (e: React.FormEvent) => {
+  const handleNewNameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (nameInput === "") {
@@ -38,7 +31,7 @@ function CatDetails() {
     }
 
     updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
-    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [ageInput, setAgeInput] = useState(0);
@@ -48,7 +41,7 @@ function CatDetails() {
     cat.age = ageInput;
 
     updateCat(cat.id, { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
-    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [weightInput, setWeightInput] = useState(0);
@@ -58,7 +51,7 @@ function CatDetails() {
     cat.weight = weightInput;
 
     updateCat(cat.id, { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
-    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [isNameInputShown, setIsNameInputShown] = useState(false);

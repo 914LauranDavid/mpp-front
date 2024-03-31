@@ -2,20 +2,16 @@ import {
   Box,
   Button,
   Divider,
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { Cat } from "../model/Cat";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import { useCatStore } from "../stores/CatStore";
 
@@ -31,16 +27,12 @@ function CatsTable() {
     getCount().then(count => { setTotalCount(count) });
   }, [currentPage]);
 
-  const { allCats, getCount, deleteCat, fetch } = useCatStore();
+  const { catsOnPage, getCount, deleteCat, fetch } = useCatStore();
 
   useEffect(() => {
     fetch(sortByNameDirection, currentPage);
-    console.log("fetching...");
+    console.log("AllCats is fetching...");
   }, [sortByNameDirection, currentPage]);
-
-  useEffect(() => { // TODO remove this?
-    fetch(sortByNameDirection, currentPage);
-  }, []);
 
   const handleSortByNameClick = () => {
     if (sortByNameDirection === "desc")
@@ -50,12 +42,10 @@ function CatsTable() {
   }
 
   const handleOnClickPrev = () => {
-    if (currentPage !== 1)
-      setCurrentPage(currentPage - 1);
+    setCurrentPage(currentPage - 1);
   }
 
   const handleOnClickNext = () => {
-    // TODO check don't let user click next when no next page
     setCurrentPage(currentPage + 1);
   }
 
@@ -68,7 +58,6 @@ function CatsTable() {
 
   const handleDelete = (id: number) => {
     deleteCat(id);
-    getCount().then(count => { setTotalCount(count) });
   }
 
   const min = (a: number, b: number) => {
@@ -87,7 +76,7 @@ function CatsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {allCats.map((cat) => (
+            {catsOnPage.map((cat) => (
               <TableRow key={cat.id}>
                 <TableCell sx={{ fontStyle: 'italic' }}>
                   <Link to={`/cats/${cat.id}`}>{cat.name}</Link>
@@ -116,7 +105,6 @@ function CatsTable() {
               <TableCell>
                 {pageSize * currentPage < totalCount && <button onClick={handleOnClickNext}>Next</button>}
               </TableCell>
-
             </TableRow>
           </TableBody>
         </Table>
@@ -126,10 +114,6 @@ function CatsTable() {
 }
 
 function AllCats() {
-  // id (not visible), string field, float field
-  // lista cu entitatile; crud (add--generate id)
-  // fara persistenta
-  // testare (unit tests), validare
   return (
     <Box sx={{ bgcolor: '#f8faca' }}>
       <CatsTable />
