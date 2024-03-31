@@ -24,7 +24,7 @@ function CatsTable() {
 
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
-    getCount().then(count => { setTotalCount(count) });
+    getCount().then(count => setTotalCount(count))
   }, [currentPage]);
 
   const { catsOnPage, getCount, deleteCat, fetch } = useCatStore();
