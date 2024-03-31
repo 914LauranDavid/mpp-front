@@ -2,9 +2,14 @@ import { PieChart } from "@mui/x-charts";
 import { Cat } from "../model/Cat";
 import { Box } from "@mui/material";
 import { useCatStore } from "../stores/CatStore";
+import { useEffect } from 'react';
 
 function AgeDistribution() {
-    const { allCats } = useCatStore();
+    const { allCats, fetch } = useCatStore();
+
+    useEffect(() => {
+        fetch("asc", 0);
+    }, []);
 
     const data: { id: number; value: number; label: string; }[] = [];
     allCats.map(cat => {
@@ -28,8 +33,8 @@ function AgeDistribution() {
                         paddingAngle: 2
                     },
                 ]}
-                width={400}
-                height={200}
+                width={700}
+                height={300}
             />
         </Box>
     );
