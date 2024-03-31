@@ -17,17 +17,19 @@ import axios from "axios";
 
 import { useCatStore } from "../stores/CatStore";
 
+
 function CatsTable() {
   const [sortByNameDirection, setSortByNameDirection] = useState("asc");
 
-  const { allCats, deleteCat, sortByName, fetch } = useCatStore();
+  const { allCats, deleteCat, fetch } = useCatStore();
 
   useEffect(() => {
-    sortByName(sortByNameDirection);
+    fetch(sortByNameDirection);
+    console.log("fetching...");
   }, [sortByNameDirection]);
 
   useEffect(() => {
-    fetch();
+    fetch(sortByNameDirection);
   }, []);
 
   const handleSortByNameClick = () => {

@@ -11,11 +11,11 @@ interface useCatStoreProps {
     allCats: Cat[],
     // selectedCatId: number,
     // selectCat: (id: number) => void,
-    fetch: () => void,
+    fetch: (sortByNameDirection: string) => void,
     addCat: (cat: CatWithoutId) => void,
     deleteCat: (id: number) => void,
     updateCat: (id: number, newCat: Cat) => void,
-    sortByName: (direction: string) => void,
+    // sortByName: (direction: string) => void,
 
     getCatById: (id: number) => Promise<Cat>
     // setAll: (newCats: Cat[]) => void
@@ -24,11 +24,13 @@ interface useCatStoreProps {
 export const useCatStore = create<useCatStoreProps>((set, get) => ({
     allCats: [],
     // selectedCatId: 1,
-    fetch: () => {
+    fetch: (sortByNameDirection: string) => {
+        console.log("catStore: sortDir=" + sortByNameDirection);
         axios
-            .get("http://localhost:3000/cats/all")
+            .get("http://localhost:3000/cats/all?sortByNameDirection=" + sortByNameDirection)
             .then(({ data }) => {
-                set(() => ({ allCats: data }))
+                set(() => ({ allCats: data }));
+                console.log("CatStore: allCats=" + (data as Cat[]).map(cat => cat.age));
             })
             .catch((error) => {
                 set(() => ({ allCats: [] }));
@@ -63,17 +65,17 @@ export const useCatStore = create<useCatStoreProps>((set, get) => ({
     },
     addCat: (newCat: CatWithoutId) => {
         axios.post("http://localhost:3000/cats/add/", newCat)
-            .then((res) => { console.log(res); get().fetch(); })
+            .then((res) => { console.log(res); get().fetch("asc"); })
             .catch((error) => console.log("Couldn't add cat: " + error));
     },
     deleteCat: (id: number) => {
         axios.delete("http://localhost:3000/cats/delete/" + id)
-            .then((res) => { console.log(res); get().fetch(); })
+            .then((res) => { console.log(res); get().fetch("asc"); })
             .catch((error) => console.log("Couldn't delete cat: " + error));
     },
     updateCat: (id: number, newCat: Cat) => {
         axios.put("http://localhost:3000/cats/update/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight })
-            .then((res) => { console.log(res); get().fetch(); })
+            .then((res) => { console.log(res); get().fetch("asc"); })
             .catch((error) => console.log("Couldn't update cat: " + error));
 
         // allCats: state.allCats.map(currentCat => {
@@ -81,10 +83,10 @@ export const useCatStore = create<useCatStoreProps>((set, get) => ({
         //         return newCat;
         //     return currentCat;
         // })
-    },
-    sortByName: (direction: string) => set((state) => ({
-        allCats: (direction === "asc" ?
-            state.allCats.sort((a, b) => a.name < b.name ? -1 : 1) :
-            state.allCats.sort((a, b) => a.name > b.name ? -1 : 1))
-    }))
+    }
+    // sortByName: (direction: string) => set((state) => ({
+    //     allCats: (direction === "asc" ?
+    //         state.allCats.sort((a, b) => a.name < b.name ? -1 : 1) :
+    //         state.allCats.sort((a, b) => a.name > b.name ? -1 : 1))
+    // }))
 }));
