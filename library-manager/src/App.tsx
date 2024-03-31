@@ -4,7 +4,6 @@ import AllCats from "./components/AllCats";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AddCat from "./components/AddCat";
 import CatDetails from "./components/CatDetails";
-import { startCatRepository } from "./repository/CatRepository";
 import NavigationBar from "./components/NavigationBar";
 import AgeDistribution from "./components/AgeDistribution";
 

@@ -20,23 +20,15 @@ import { useCatStore } from "../stores/CatStore";
 function CatsTable() {
   const [sortByNameDirection, setSortByNameDirection] = useState("asc");
 
-  // const [allCatsFromBack, setAllCatsFromBack] = useState([]);
-  // useEffect(() => { // TODO move this in CatStore . getAll?
-  //   axios
-  //     .get("http://localhost:3000/cats/all")
-  //     .then(({ data }) => {
-  //       setAllCatsFromBack(data);
-  //     })
-  //     .catch((error) => console.log(error));
-  // }, []
-  // );
+  const { allCats, deleteCat, sortByName, fetch } = useCatStore();
 
-  const { allCats, deleteCat, sortByName } = useCatStore();
-
-  // TODO make sorting work
   useEffect(() => {
     sortByName(sortByNameDirection);
   }, [sortByNameDirection]);
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   const handleSortByNameClick = () => {
     if (sortByNameDirection === "desc")

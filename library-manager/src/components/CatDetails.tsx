@@ -1,5 +1,5 @@
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Cat } from "../model/Cat";
@@ -16,12 +16,17 @@ function CatDetails() {
     return <h1>The parameters are incorrect</h1>;
   }
 
+  const [cat, setCat] = useState({ id: -1, name: "", age: -1, weight: -1 });
   // const cat = allCats.find((cat) => cat.id === parseInt(id));
-  let cat = getCatById(parseInt(id));
 
-  if (cat.id === -1) {
-    return <h1>No cat with this id.</h1>;
-  }
+  useEffect(() => {
+    getCatById(parseInt(id)).then(received => setCat(received));
+    console.log("useEffect cat: " + cat.age);
+  }, []);
+
+  // if (cat.id === -1) {
+  //   return <h1>No cat with this id.</h1>;
+  // }
 
   const [nameInput, setNameInput] = useState("");
   const handleNewNameSubmit = (e: React.FormEvent) => {
@@ -33,7 +38,7 @@ function CatDetails() {
     }
 
     updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
   };
 
   const [ageInput, setAgeInput] = useState(0);
@@ -43,7 +48,7 @@ function CatDetails() {
     cat.age = ageInput;
 
     updateCat(cat.id, { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
   };
 
   const [weightInput, setWeightInput] = useState(0);
@@ -53,7 +58,7 @@ function CatDetails() {
     cat.weight = weightInput;
 
     updateCat(cat.id, { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    getCatById(parseInt(id)).then(received => setCat(received));  // TODO see if this is ok
   };
 
   const [isNameInputShown, setIsNameInputShown] = useState(false);

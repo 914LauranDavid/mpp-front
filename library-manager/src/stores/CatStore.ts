@@ -1,42 +1,87 @@
+import axios from "axios";
 import { Cat } from "../model/Cat";
 import { create } from "zustand";
 
-const hardcodedCats = [
-    { id: 1, name: "Sofia", age: 2, weight: 2.3 },
-    { id: 2, name: "Raymond", age: 5, weight: 3.8 },
-];
+interface CatWithoutId { name: string, age: number, weight: number };
+
 
 const errorCat: Cat = { id: -1, name: "Error", age: -1, weight: -1 };
 
 interface useCatStoreProps {
     allCats: Cat[],
-    getCatById: (id: number) => Cat,
-    addCat: (cat: Cat) => void,
+    // selectedCatId: number,
+    // selectCat: (id: number) => void,
+    fetch: () => void,
+    addCat: (cat: CatWithoutId) => void,
     deleteCat: (id: number) => void,
     updateCat: (id: number, newCat: Cat) => void,
-    sortByName: (direction: string) => void
+    sortByName: (direction: string) => void,
+
+    getCatById: (id: number) => Promise<Cat>
     // setAll: (newCats: Cat[]) => void
 }
 
 export const useCatStore = create<useCatStoreProps>((set, get) => ({
-    allCats: hardcodedCats,
-    getCatById: (id: number) => {
-        const { allCats } = get();
-        const cat = allCats.find(cat => cat.id === id);
-        if (cat !== undefined)
-            return cat;
-        return errorCat;
+    allCats: [],
+    // selectedCatId: 1,
+    fetch: () => {
+        axios
+            .get("http://localhost:3000/cats/all")
+            .then(({ data }) => {
+                set(() => ({ allCats: data }))
+            })
+            .catch((error) => {
+                set(() => ({ allCats: [] }));
+                console.log(error);
+            });
     },
-    addCat: (newCat: Cat) => set((state) => ({ allCats: [...state.allCats, newCat] })),
-    deleteCat: (id: number) => set((state) => ({ allCats: state.allCats.filter(cat => cat.id !== id) })),
-    updateCat: (id: number, newCat: Cat) => set((state) => ({
-        allCats: state.allCats.map(currentCat => {
-            if (currentCat.id === id)
-                return newCat;
-            return currentCat;
-        })
-    }
-    )),
+    // selectCat: (id: number) => set({ selectedCatId: id }),
+    getCatById: async (id: number) => {
+        try {
+            const response = await axios
+                .get("http://localhost:3000/cats/get-by-id/" + id);
+            console.log("will respond with cat of age " + response.data.age);
+            return response.data as Cat;
+        }
+        catch (error) {
+            return errorCat;
+        }
+
+        // .then(({ data }) => {
+
+        // })
+        // .catch((error) => {
+        //     set(() => ({ allCats: [] }));
+        //     console.log(error);
+        // });
+
+        // const { allCats } = get();
+        // const cat = allCats.find(cat => cat.id === id);
+        // if (cat !== undefined)
+        //     return cat;
+        // return errorCat;
+    },
+    addCat: (newCat: CatWithoutId) => {
+        axios.post("http://localhost:3000/cats/add/", newCat)
+            .then((res) => { console.log(res); get().fetch(); })
+            .catch((error) => console.log("Couldn't add cat: " + error));
+    },
+    deleteCat: (id: number) => {
+        axios.delete("http://localhost:3000/cats/delete/" + id)
+            .then((res) => { console.log(res); get().fetch(); })
+            .catch((error) => console.log("Couldn't delete cat: " + error));
+    },
+    updateCat: (id: number, newCat: Cat) => {
+        axios.put("http://localhost:3000/cats/update/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight })
+            .then((res) => { console.log(res); get().fetch(); })
+            .catch((error) => console.log("Couldn't update cat: " + error));
+
+        // allCats: state.allCats.map(currentCat => {
+        //     if (currentCat.id === id)
+        //         return newCat;
+        //     return currentCat;
+        // })
+    },
     sortByName: (direction: string) => set((state) => ({
         allCats: (direction === "asc" ?
             state.allCats.sort((a, b) => a.name < b.name ? -1 : 1) :

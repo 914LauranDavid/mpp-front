@@ -9,7 +9,7 @@ function AddCat() {
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
 
-  const { allCats, addCat } = useCatStore();
+  const { addCat } = useCatStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,13 +19,7 @@ function AddCat() {
       return;
     }
 
-    let maximumId = 0;
-    allCats.forEach(cat => {
-      if (cat.id > maximumId)
-        maximumId = cat.id;
-    });  // TODO search for ID in addCat 
-
-    addCat({ id: maximumId + 1, name: name, age: age, weight: weight })
+    addCat({ name: name, age: age, weight: weight });
   };
 
   return (
