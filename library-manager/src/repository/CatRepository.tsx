@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Cat } from "../model/Cat";
 
+// TODO remove the file after moving it to the backend
+
 const hardcodedCats = [
     { id: 1, name: "Sofia", age: 2, weight: 2.3 },
     { id: 2, name: "Raymond", age: 5, weight: 3.8 },

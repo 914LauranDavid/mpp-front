@@ -13,33 +13,40 @@ import { Link } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { Cat } from "../model/Cat";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-function CatsTable(
-  { getAllCats, deleteCat, setAll }:
-    {
-      getAllCats: () => Cat[];
-      deleteCat: (id: number) => void;
-      setAll: (cats: Cat[]) => void;
-    }) {
-  const [sortedByName, setSortedByName] = useState("nothing");
+import { useCatStore } from "../stores/CatStore";
 
+function CatsTable() {
+  const [sortByNameDirection, setSortByNameDirection] = useState("asc");
+
+  // const [allCatsFromBack, setAllCatsFromBack] = useState([]);
+  // useEffect(() => { // TODO move this in CatStore . getAll?
+  //   axios
+  //     .get("http://localhost:3000/cats/all")
+  //     .then(({ data }) => {
+  //       setAllCatsFromBack(data);
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, []
+  // );
+
+  const { allCats, deleteCat, sortByName } = useCatStore();
+
+  // TODO make sorting work
   useEffect(() => {
-    if (sortedByName === "asc") {
-      setAll(getAllCats().sort((a, b) => a.name < b.name ? -1 : 1));
-    } else if (sortedByName === "desc") {
-      setAll(getAllCats().sort((a, b) => a.name > b.name ? -1 : 1));
-    }
-  }, [sortedByName]);
+    sortByName(sortByNameDirection);
+  }, [sortByNameDirection]);
 
   const handleSortByNameClick = () => {
-    if (sortedByName === "desc")
-      setSortedByName("asc");
+    if (sortByNameDirection === "desc")
+      setSortByNameDirection("asc");
     else
-      setSortedByName("desc");
+      setSortByNameDirection("desc");
   }
 
   const getSortByNameButtonOrderUiText = () => {
-    if (sortedByName === "desc")
+    if (sortByNameDirection === "desc")
       return " increasingly ";
     else
       return " decreasingly ";
@@ -56,7 +63,7 @@ function CatsTable(
           </TableRow>
         </TableHead>
         <TableBody>
-          {getAllCats().map((cat) => (
+          {allCats.map((cat) => (
             <TableRow key={cat.id}>
               <TableCell sx={{ fontStyle: 'italic' }}>
                 <Link to={`/cats/${cat.id}`}>{cat.name}</Link>
@@ -81,18 +88,14 @@ function CatsTable(
   );
 }
 
-function AllCats({ getAllCats, deleteCat, setAll }: {
-  getAllCats: () => Cat[];
-  deleteCat: (id: number) => void;
-  setAll: (cats: Cat[]) => void;
-}) {
+function AllCats() {
   // id (not visible), string field, float field
   // lista cu entitatile; crud (add--generate id)
   // fara persistenta
   // testare (unit tests), validare
   return (
     <Box sx={{ bgcolor: '#f8faca' }}>
-      <CatsTable getAllCats={getAllCats} deleteCat={deleteCat} setAll={setAll} />
+      <CatsTable />
       <Divider />
     </Box>
   );

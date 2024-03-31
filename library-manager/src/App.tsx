@@ -10,7 +10,7 @@ import AgeDistribution from "./components/AgeDistribution";
 
 
 function App() {
-  const { getAllCats, getCatById, addCat, deleteCat, updateCat, setAll } = startCatRepository();
+  // const { getAllCats, getCatById, addCat, deleteCat, updateCat, setAll } = startCatRepository();
 
   return (
     <BrowserRouter>
@@ -18,19 +18,19 @@ function App() {
       <Routes>
         <Route
           path="/cats"
-          element={<AllCats getAllCats={getAllCats} deleteCat={deleteCat} setAll={setAll} />}
+          element={<AllCats />}
         />
         <Route
           path="/cat/add"
-          element={<AddCat getAllCats={getAllCats} addCat={addCat} />}
+          element={<AddCat />}
         />
         <Route
           path="/cats/:id"
-          element={<CatDetails getCatById={getCatById} updateCat={updateCat} />}
+          element={<CatDetails />}
         />
         <Route
           path="/cat/age_distribution"
-          element={<AgeDistribution getAllCats={getAllCats} />}
+          element={<AgeDistribution />}
         />
       </Routes>
     </BrowserRouter>

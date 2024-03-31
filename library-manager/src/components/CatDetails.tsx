@@ -4,16 +4,13 @@ import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Cat } from "../model/Cat";
 import EditIcon from '@mui/icons-material/Edit';
+import { useCatStore } from "../stores/CatStore";
 
-function CatDetails({
-  getCatById,
-  updateCat,
-}: {
-  getCatById: (id: number) => Cat
-  updateCat: (id: number, newCat: Cat) => void;
-}) {
+function CatDetails() {
   const params = useParams<{ id: string }>();
   const id = params.id;
+
+  const { getCatById, updateCat } = useCatStore();
 
   if (!id) {
     return <h1>The parameters are incorrect</h1>;

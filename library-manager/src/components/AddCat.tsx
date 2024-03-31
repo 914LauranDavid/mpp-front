@@ -2,17 +2,14 @@ import { Box, Button, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
 import { Cat } from "../model/Cat";
+import {useCatStore} from "../stores/CatStore";
 
-function AddCat({
-  getAllCats,
-  addCat
-}: {
-  getAllCats: () => Cat[];
-  addCat: (cat: Cat) => void;
-}) {
+function AddCat() {
   const [name, setName] = useState("");
   const [age, setAge] = useState(0);
   const [weight, setWeight] = useState(0);
+
+  const { allCats, addCat } = useCatStore();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +20,7 @@ function AddCat({
     }
 
     let maximumId = 0;
-    getAllCats().forEach(cat => {
+    allCats.forEach(cat => {
       if (cat.id > maximumId)
         maximumId = cat.id;
     });  // TODO search for ID in addCat 
