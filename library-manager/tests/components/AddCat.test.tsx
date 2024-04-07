@@ -42,6 +42,4 @@ describe('AddCat', () => {
 
         expect(mockAddCat).toHaveBeenCalled();
     });
-
-    
 });
