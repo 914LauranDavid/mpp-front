@@ -1,4 +1,4 @@
-import { Cat, CatWithoutId } from "../domain/Cat";
+import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
 import { create } from "zustand";
 import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeUpdateCall } from "../api/CatsApi";
 
@@ -12,75 +12,42 @@ interface useCatStoreProps {
     addCat: (cat: CatWithoutId) => void,
     deleteCat: (id: number) => void,
     updateCat: (id: number, newCat: Cat) => void,
-    getCatById: (id: number) => Promise<Cat>
+    getCatById: (id: number) => Promise<Cat>,
+    isServerDown: boolean
 }
 
-export const useCatStore = create<useCatStoreProps>((set, get) => ({
-    catsOnPage: [],
-    fetch: (sortByNameDirection: string, page: number) => {
-        lastFetchedPage = page;
-        lastSortDirection = sortByNameDirection;
+export const useCatStore = create<useCatStoreProps>((set, get) => (
+    {
+        catsOnPage: [],
+        fetch: (sortByNameDirection: string, page: number) => {
+            lastFetchedPage = page;
+            lastSortDirection = sortByNameDirection;
 
-        makeAllCall(sortByNameDirection, page).then(result => {
-            set(() => ({ catsOnPage: result }))
-        });
+            return makeAllCall(sortByNameDirection, page).then(result => {
+                set(() => ({ catsOnPage: result }));
 
-        // axios
-        //     .get("http://localhost:3000/cats/all?sortByNameDirection=" + sortByNameDirection + "&page=" + page)
-        //     .then(({ data }) => {
-        //         set(() => ({ catsOnPage: data }));
-        //     })
-        //     .catch((error) => {
-        //         set(() => ({ catsOnPage: [] }));
-        //         console.log("Error fetching cats: " + error);
-        //     });
-    },
-    getCount: () => {
-        return makeCountCall();
-
-        // return axios
-        //     .get("http://localhost:3000/cats/count")
-        //     .then(({ data }) => {
-        //         return data.count as number;
-        //     })
-        //     .catch((error) => {
-        //         console.log("Error getting count: " + error);
-        //         return 0;
-        //     });
-    },
-    getCatById: (id: number) => {
-        return makeGetByIdCall(id);
-
-        // return axios
-        //     .get("http://localhost:3000/cats/get-by-id/" + id)
-        //     .then(({ data }) => {
-        //         return data as Cat;
-        //     })
-        //     .catch((error) => {
-        //         console.log("Error getting by id: " + error);
-        //         return errorCat;
-        //     });
-    },
-    addCat: (newCat: CatWithoutId) => {
-        makeAddCall(newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
-
-
-        // axios.post("http://localhost:3000/cats/add/", newCat)
-        //     .then((res) => { console.log(res); get().fetch(lastSortDirection, lastFetchedPage); })
-        //     .catch((error) => console.log("Couldn't add cat: " + error));
-    },
-    deleteCat: (id: number) => {
-        makeDeleteCall(id).then(() => get().fetch(lastSortDirection, lastFetchedPage));
-
-        // axios.delete("http://localhost:3000/cats/delete/" + id)
-        //     .then((res) => { console.log(res); get().fetch(lastSortDirection, lastFetchedPage); })
-        //     .catch((error) => console.log("Couldn't delete cat: " + error));
-    },
-    updateCat: (id: number, newCat: Cat) => {
-        makeUpdateCall(id, newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
-
-        // axios.put("http://localhost:3000/cats/update/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight })
-        //     .then((res) => { console.log(res); get().fetch(lastSortDirection, lastFetchedPage); })
-        //     .catch((error) => console.log("Couldn't update cat: " + error));
-    }
-}));
+                if (result.length === 1 && result[0] === errorCat) {
+                    console.log(`catStore: makeAll returned error`);
+                    set(({ isServerDown: true }));
+                } else {
+                    set(({ isServerDown: false }));
+                }
+            });
+        },
+        getCount: () => {
+            return makeCountCall();
+        },
+        getCatById: (id: number) => {
+            return makeGetByIdCall(id);
+        },
+        addCat: (newCat: CatWithoutId) => {
+            makeAddCall(newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+        },
+        deleteCat: (id: number) => {
+            makeDeleteCall(id).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+        },
+        updateCat: (id: number, newCat: Cat) => {
+            makeUpdateCall(id, newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+        },
+        isServerDown: false
+    }));

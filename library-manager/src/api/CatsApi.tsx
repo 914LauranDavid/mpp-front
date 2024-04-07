@@ -12,7 +12,7 @@ export const makeAllCall = (sortByNameDirection: string, page: number) => {
         })
         .catch((error) => {
             console.log("Error fetching cats: " + error);
-            return [];
+            return [errorCat];
         });
 }
 

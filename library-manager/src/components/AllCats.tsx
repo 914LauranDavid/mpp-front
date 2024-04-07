@@ -31,7 +31,6 @@ function CatsTable() {
 
   useEffect(() => {
     fetch(sortByNameDirection, currentPage);
-    console.log("AllCats is fetching...");
   }, [sortByNameDirection, currentPage]);
 
   const handleSortByNameClick = () => {

@@ -6,13 +6,17 @@ import AddCat from "./components/AddCat";
 import CatDetails from "./components/CatDetails";
 import NavigationBar from "./components/NavigationBar";
 import AgeDistribution from "./components/AgeDistribution";
+import NetworkStatus from "./components/NetworkStatus";
+import { useCatStore } from "./stores/CatStore";
+import ServerStatus from "./components/ServerStatus";
 
 
 function App() {
-  // const { getAllCats, getCatById, addCat, deleteCat, updateCat, setAll } = startCatRepository();
-
   return (
     <BrowserRouter>
+      <NetworkStatus />
+      {/* {isServerDown && <div>Server is down</div>} */}
+      <ServerStatus />
       <NavigationBar />
       <Routes>
         <Route
