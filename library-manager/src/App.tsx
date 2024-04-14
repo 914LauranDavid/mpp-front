@@ -9,9 +9,12 @@ import AgeDistribution from "./components/AgeDistribution";
 import NetworkStatus from "./components/NetworkStatus";
 import { useCatStore } from "./stores/CatStore";
 import ServerStatus from "./components/ServerStatus";
+import { initializeWebSocket } from "./sockets/ServerWebSocket";
 
 
 function App() {
+  initializeWebSocket();
+  
   return (
     <BrowserRouter>
       <NetworkStatus />

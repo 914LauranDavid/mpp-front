@@ -1,6 +1,7 @@
 import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
 import { create } from "zustand";
 import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeUpdateCall } from "../api/CatsApi";
+import { Server } from "socket.io";
 
 let lastFetchedPage = 0;
 let lastSortDirection = "asc";
@@ -8,6 +9,7 @@ let lastSortDirection = "asc";
 interface useCatStoreProps {
     catsOnPage: Cat[],
     fetch: (sortByNameDirection: string, page: number) => void,
+    fetchLastPageAndSortDirection: () => void,
     getCount: () => Promise<number>,
     addCat: (cat: CatWithoutId) => void,
     deleteCat: (id: number) => void,
@@ -15,6 +17,7 @@ interface useCatStoreProps {
     getCatById: (id: number) => Promise<Cat>,
     isServerDown: boolean
 }
+
 
 export const useCatStore = create<useCatStoreProps>((set, get) => (
     {
@@ -33,6 +36,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
                     set(({ isServerDown: false }));
                 }
             });
+        },
+        fetchLastPageAndSortDirection : () => {
+            get().fetch(lastSortDirection, lastFetchedPage);
         },
         getCount: () => {
             return makeCountCall();
