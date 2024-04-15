@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
-import { useCatStore } from "../stores/CatStore";
+import { useCatStore } from "../../stores/CatStore";
 
 function CatDetails() {
   const params = useParams<{ id: string }>();

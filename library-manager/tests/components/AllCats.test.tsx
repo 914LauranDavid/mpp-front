@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import AllCats from '../../src/components/AllCats';
+import AllCats from '../../src/components/cats/AllCats';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Cat } from "../../src/domain/Cat"

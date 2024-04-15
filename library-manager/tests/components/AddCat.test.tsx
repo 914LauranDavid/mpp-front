@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import AddCat from '../../src/components/AddCat';
+import AddCat from '../../src/components/cats/AddCat';
 import '@testing-library/jest-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Addchart } from '@mui/icons-material';

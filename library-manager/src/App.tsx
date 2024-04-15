@@ -1,11 +1,11 @@
 import "./App.css";
-import "./components/AllCats";
-import AllCats from "./components/AllCats";
+import "./components/cats/AllCats";
+import AllCats from "./components/cats/AllCats";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AddCat from "./components/AddCat";
-import CatDetails from "./components/CatDetails";
+import AddCat from "./components/cats/AddCat";
+import CatDetails from "./components/cats/CatDetails";
 import NavigationBar from "./components/NavigationBar";
-import AgeDistribution from "./components/AgeDistribution";
+import AgeDistribution from "./components/cats/AgeDistribution";
 import NetworkStatus from "./components/NetworkStatus";
 import { useCatStore } from "./stores/CatStore";
 import ServerStatus from "./components/ServerStatus";

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import CatDetails from '../../src/components/CatDetails';
+import CatDetails from '../../src/components/cats/CatDetails';
 import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter, Route, Routes } from 'react-router-dom';
 

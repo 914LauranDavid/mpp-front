@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
-import { useCatStore } from "../stores/CatStore";
+import { useCatStore } from "../../stores/CatStore";
 
 function AddCat() {
   const [name, setName] = useState("");

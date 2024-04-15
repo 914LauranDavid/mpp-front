@@ -3,7 +3,7 @@ import { useCatStore } from "../stores/CatStore";
 let ws: WebSocket;
 
 export const initializeWebSocket = () => {
-    ws = new WebSocket('ws://localhost:8080');
+    ws = new WebSocket('ws://localhost:8087');
     ws.onmessage = () => {
         useCatStore.getState().fetchLastPageAndSortDirection();
     };

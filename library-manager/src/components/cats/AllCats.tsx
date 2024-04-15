@@ -13,7 +13,7 @@ import { Link } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useEffect, useState } from "react";
 
-import { useCatStore } from "../stores/CatStore";
+import { useCatStore } from "../../stores/CatStore";
 
 
 function CatsTable() {

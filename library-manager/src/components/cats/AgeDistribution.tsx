@@ -1,6 +1,6 @@
 import { PieChart } from "@mui/x-charts";
 import { Box } from "@mui/material";
-import { useCatStore } from "../stores/CatStore";
+import { useCatStore } from "../../stores/CatStore";
 import { useEffect } from 'react';
 
 function AgeDistribution() {
