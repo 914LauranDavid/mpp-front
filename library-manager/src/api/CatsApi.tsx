@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
+import { CatNumberPair } from "../stores/CatStore";
 
 const baseBackendUrl = "http://localhost:3000/";
 
@@ -53,4 +54,16 @@ export const makeDeleteCall = (id: number) => {
 export const makeUpdateCall = (id: number, newCat: Cat) => {
     return axios.put(baseBackendUrl + "cats/update/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight })
         .catch((error) => console.log("Couldn't update cat: " + error));
+}
+
+export const makeGetToysPerCatCall = () => {
+    return axios
+        .get(baseBackendUrl + "cats/toys_per_cat")
+        .then(({ data }) => {
+            return data as CatNumberPair[];
+        })
+        .catch((error) => {
+            console.log("Error getting toys per cat in CatsApi: " + error);
+            return [] as CatNumberPair[];
+        });
 }

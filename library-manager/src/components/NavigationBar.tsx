@@ -36,6 +36,11 @@ function NavigationBar() {
                                 Age distribution
                             </Button>
                         </Link>
+                        <Link to="/cat/toys_per_cat">
+                            <Button sx={{ my: 2, color: 'black', display: 'block', fontWeight: 700 }}>
+                                Toys per cat
+                            </Button>
+                        </Link>
                     </Box>
                 </Toolbar>
             </Container>

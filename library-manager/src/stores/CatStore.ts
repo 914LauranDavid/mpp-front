@@ -1,7 +1,8 @@
 import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
 import { create } from "zustand";
-import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeUpdateCall } from "../api/CatsApi";
+import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall, makeUpdateCall } from "../api/CatsApi";
 import { Server } from "socket.io";
+import { Toy } from "../domain/Toy";
 
 let lastFetchedPage = 0;
 let lastSortDirection = "asc";
@@ -18,6 +19,10 @@ interface UserOperation {
     cat: CatWithoutId
 };
 
+export interface CatNumberPair {
+    cat: Cat,
+    theNumber: number
+}
 
 interface useCatStoreProps {
     catsOnPage: Cat[],
@@ -29,7 +34,8 @@ interface useCatStoreProps {
     updateCat: (id: number, newCat: Cat) => void,
     getCatById: (id: number) => Promise<Cat>,
     isServerDown: boolean,
-    getPendingOperations: () => UserOperation[]
+    getPendingOperations: () => UserOperation[],
+    getToysPerCat: () => Promise<CatNumberPair[]>
 }
 
 
@@ -120,6 +126,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
         isServerDown: false,
         getPendingOperations: () => {
             return pendingOperations;
+        },
+        getToysPerCat: () => {
+            return makeGetToysPerCatCall();
         }
     }
 });

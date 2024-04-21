@@ -10,6 +10,7 @@ import NetworkStatus from "./components/NetworkStatus";
 import { useCatStore } from "./stores/CatStore";
 import ServerStatus from "./components/ServerStatus";
 import { initializeWebSocket } from "./sockets/ServerWebSocket";
+import ToysPerCat from "./components/ToysPerCat";
 
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
         <Route
           path="/cat/age_distribution"
           element={<AgeDistribution />}
+        />
+        <Route
+          path="/cat/toys_per_cat"
+          element={<ToysPerCat />}
         />
       </Routes>
     </BrowserRouter>
