@@ -18,6 +18,7 @@ interface UserOperation {
     cat: CatWithoutId
 };
 
+
 interface useCatStoreProps {
     catsOnPage: Cat[],
     fetch: (sortByNameDirection: string, page: number) => void,
@@ -32,8 +33,32 @@ interface useCatStoreProps {
 }
 
 
-export const useCatStore = create<useCatStoreProps>((set, get) => (
-    {
+export const useCatStore = create<useCatStoreProps>((set, get) => {
+    const processPendingOperations = () => {
+        console.log('will process the pending operations now');
+        
+        let pendingOperationsCopy: UserOperation[] = JSON.parse(JSON.stringify(pendingOperations));
+        pendingOperations = [];
+
+        pendingOperationsCopy.forEach((operation) => {
+            switch (operation.type) {
+                case addOperationCode:
+                    get().addCat(operation.cat);
+                    break;
+                case updateOperationCode:
+                    get().updateCat(
+                        operation.id,
+                        { id: operation.id, name: operation.cat.name, age: operation.cat.age, weight: operation.cat.weight }
+                    );
+                    break;
+                case deleteOperationCode:
+                    get().deleteCat(operation.id);
+                    break;
+            }
+        });
+    }
+
+    return {
         catsOnPage: [],
         fetch: (sortByNameDirection: string, page: number) => {
             lastFetchedPage = page;
@@ -49,6 +74,7 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
                 } else {
                     set(({ isServerDown: false }));
                     cachedCats = JSON.parse(JSON.stringify(result));
+                    processPendingOperations();
                 }
             });
         },
@@ -62,9 +88,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
             return makeGetByIdCall(id);
         },
         addCat: (newCat: CatWithoutId) => {
-            makeAddCall(newCat).then((response) => {   
+            makeAddCall(newCat).then((response) => {
                 if (response === undefined) {
-                    pendingOperations.push({type: addOperationCode, id: 0, cat: newCat});
+                    pendingOperations.push({ type: addOperationCode, id: 0, cat: newCat });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
                 }
 
@@ -74,17 +100,17 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
         deleteCat: (id: number) => {
             makeDeleteCall(id).then((response) => {
                 if (response === undefined) {
-                    pendingOperations.push({type: deleteOperationCode, id: id, cat: errorCat});
+                    pendingOperations.push({ type: deleteOperationCode, id: id, cat: errorCat });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
                 }
-                
+
                 get().fetch(lastSortDirection, lastFetchedPage);
             });
         },
         updateCat: (id: number, newCat: Cat) => {
             makeUpdateCall(id, newCat).then((response) => {
                 if (response === undefined) {
-                    pendingOperations.push({type: updateOperationCode, id: id, cat: newCat});
+                    pendingOperations.push({ type: updateOperationCode, id: id, cat: newCat });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
                 }
 
@@ -95,4 +121,5 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
         getPendingOperations: () => {
             return pendingOperations;
         }
-    }));
+    }
+});
