@@ -5,6 +5,18 @@ import { Server } from "socket.io";
 
 let lastFetchedPage = 0;
 let lastSortDirection = "asc";
+let pendingOperations: UserOperation[] = [];
+
+let cachedCats: Cat[] = [];
+
+let addOperationCode = 1;
+let updateOperationCode = 2;
+let deleteOperationCode = 3;
+interface UserOperation {
+    type: number,
+    id: number,
+    cat: CatWithoutId
+};
 
 interface useCatStoreProps {
     catsOnPage: Cat[],
@@ -15,7 +27,8 @@ interface useCatStoreProps {
     deleteCat: (id: number) => void,
     updateCat: (id: number, newCat: Cat) => void,
     getCatById: (id: number) => Promise<Cat>,
-    isServerDown: boolean
+    isServerDown: boolean,
+    getPendingOperations: () => UserOperation[]
 }
 
 
@@ -32,12 +45,14 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
                 if (result.length === 1 && result[0] === errorCat) {
                     console.log(`catStore: makeAll returned error`);
                     set(({ isServerDown: true }));
+                    set(() => ({ catsOnPage: cachedCats }));
                 } else {
                     set(({ isServerDown: false }));
+                    cachedCats = JSON.parse(JSON.stringify(result));
                 }
             });
         },
-        fetchLastPageAndSortDirection : () => {
+        fetchLastPageAndSortDirection: () => {
             get().fetch(lastSortDirection, lastFetchedPage);
         },
         getCount: () => {
@@ -47,13 +62,37 @@ export const useCatStore = create<useCatStoreProps>((set, get) => (
             return makeGetByIdCall(id);
         },
         addCat: (newCat: CatWithoutId) => {
-            makeAddCall(newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+            makeAddCall(newCat).then((response) => {   
+                if (response === undefined) {
+                    pendingOperations.push({type: addOperationCode, id: 0, cat: newCat});
+                    console.log('pending operations: ' + JSON.stringify(pendingOperations));
+                }
+
+                get().fetch(lastSortDirection, lastFetchedPage);
+            });
         },
         deleteCat: (id: number) => {
-            makeDeleteCall(id).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+            makeDeleteCall(id).then((response) => {
+                if (response === undefined) {
+                    pendingOperations.push({type: deleteOperationCode, id: id, cat: errorCat});
+                    console.log('pending operations: ' + JSON.stringify(pendingOperations));
+                }
+                
+                get().fetch(lastSortDirection, lastFetchedPage);
+            });
         },
         updateCat: (id: number, newCat: Cat) => {
-            makeUpdateCall(id, newCat).then(() => get().fetch(lastSortDirection, lastFetchedPage));
+            makeUpdateCall(id, newCat).then((response) => {
+                if (response === undefined) {
+                    pendingOperations.push({type: updateOperationCode, id: id, cat: newCat});
+                    console.log('pending operations: ' + JSON.stringify(pendingOperations));
+                }
+
+                get().fetch(lastSortDirection, lastFetchedPage);
+            });
         },
-        isServerDown: false
+        isServerDown: false,
+        getPendingOperations: () => {
+            return pendingOperations;
+        }
     }));

@@ -16,7 +16,7 @@ function CatDetails() {
     return <h1>The parameters are incorrect</h1>;
   }
 
-  const [cat, setCat] = useState({ id: -1, name: "", age: -1, weight: -1 });
+  const [cat, setCat] = useState({ id: parseInt(id), name: "", age: -1, weight: -1 });
 
   useEffect(() => {
     getCatById(parseInt(id)).then(received => setCat(received));
@@ -31,7 +31,7 @@ function CatDetails() {
       return;
     }
 
-    updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
+    updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
     getCatById(parseInt(id)).then(received => setCat(received));
   };
 
@@ -41,7 +41,7 @@ function CatDetails() {
 
     cat.age = ageInput;
 
-    updateCat(cat.id, { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
+    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
     getCatById(parseInt(id)).then(received => setCat(received));
   };
 
@@ -51,7 +51,7 @@ function CatDetails() {
 
     cat.weight = weightInput;
 
-    updateCat(cat.id, { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
+    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
     getCatById(parseInt(id)).then(received => setCat(received));
   };
 
