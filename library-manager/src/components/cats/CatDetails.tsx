@@ -1,33 +1,29 @@
 import { Button, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Cat } from "../model/Cat";
 import EditIcon from '@mui/icons-material/Edit';
+import { useCatStore } from "../../stores/CatStore";
 
-function CatDetails({
-  getCatById,
-  updateCat,
-}: {
-  getCatById: (id: number) => Cat
-  updateCat: (id: number, newCat: Cat) => void;
-}) {
+function CatDetails() {
   const params = useParams<{ id: string }>();
   const id = params.id;
 
+  const { getCatById, updateCat } = useCatStore();
+
   if (!id) {
+    console.log("params incorrect...");
     return <h1>The parameters are incorrect</h1>;
   }
 
-  // const cat = allCats.find((cat) => cat.id === parseInt(id));
-  let cat = getCatById(parseInt(id));
+  const [cat, setCat] = useState({ id: parseInt(id), name: "", age: -1, weight: -1 });
 
-  if (cat.id === -1) {
-    return <h1>No cat with this id.</h1>;
-  }
+  useEffect(() => {
+    getCatById(parseInt(id)).then(received => setCat(received));
+  }, []);
 
   const [nameInput, setNameInput] = useState("");
-  const handleNewNameSubmit = (e: React.FormEvent) => {
+  const handleNewNameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (nameInput === "") {
@@ -35,8 +31,8 @@ function CatDetails({
       return;
     }
 
-    updateCat(cat.id, { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [ageInput, setAgeInput] = useState(0);
@@ -45,8 +41,8 @@ function CatDetails({
 
     cat.age = ageInput;
 
-    updateCat(cat.id, { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [weightInput, setWeightInput] = useState(0);
@@ -55,8 +51,8 @@ function CatDetails({
 
     cat.weight = weightInput;
 
-    updateCat(cat.id, { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
-    cat = getCatById(cat.id);  // TODO see if this is ok
+    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
+    getCatById(parseInt(id)).then(received => setCat(received));
   };
 
   const [isNameInputShown, setIsNameInputShown] = useState(false);
@@ -71,7 +67,7 @@ function CatDetails({
             <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.name}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsNameInputShown(!isNameInputShown)}>
+              <Button onClick={() => setIsNameInputShown(!isNameInputShown)} aria-label="openNameInput">
                 <EditIcon />
               </Button>
               {isNameInputShown && <form onSubmit={handleNewNameSubmit}>
@@ -82,7 +78,7 @@ function CatDetails({
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                 />
-                <Button type="submit">
+                <Button type="submit" aria-label="submitName">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
               </form>}
@@ -92,19 +88,20 @@ function CatDetails({
             <TableCell sx={{ fontWeight: 800, }}>Age</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.age}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsAgeInputShown(!isAgeInputShown)}>
+              <Button onClick={() => setIsAgeInputShown(!isAgeInputShown)} aria-label="openAgeInput">
                 <EditIcon />
               </Button>
               {isAgeInputShown && <form onSubmit={handleNewAgeSubmit}>
                 <TextField
                   size="small"
                   id="ageInput"
+                  aria-label="ageInput"
                   placeholder="New age"
                   inputProps={{ type: "number" }}
                   value={ageInput}
                   onChange={(e) => setAgeInput(parseInt(e.target.value))}
                 />
-                <Button type="submit">
+                <Button type="submit" aria-label="submitAge">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
               </form>}
@@ -114,7 +111,7 @@ function CatDetails({
             <TableCell sx={{ fontWeight: 800, }}>Weight</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.weight}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsWeightInputShown(!isWeightInputShown)}>
+              <Button onClick={() => setIsWeightInputShown(!isWeightInputShown)} aria-label="openWeightInput">
                 <EditIcon />
               </Button>
               {isWeightInputShown && <form onSubmit={handleNewWeightSubmit}>
@@ -126,7 +123,7 @@ function CatDetails({
                   value={weightInput}
                   onChange={(e) => setWeightInput(parseFloat(e.target.value))}
                 />
-                <Button type="submit">
+                <Button type="submit" aria-label="submitWeight">
                   <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                 </Button>
               </form>}
