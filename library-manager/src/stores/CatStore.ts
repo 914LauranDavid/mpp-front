@@ -1,6 +1,6 @@
 import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
 import { create } from "zustand";
-import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall, makeUpdateCall } from "../api/CatsApi";
+import { makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall, makeGetUsersFavoriteBreedCall, makeUpdateCall } from "../api/CatsApi";
 import { Server } from "socket.io";
 import { Toy } from "../domain/Toy";
 
@@ -35,7 +35,8 @@ interface useCatStoreProps {
     getCatById: (id: number) => Promise<Cat>,
     isServerDown: boolean,
     getPendingOperations: () => UserOperation[],
-    getToysPerCat: (count: number) => Promise<CatNumberPair[]>
+    getToysPerCat: (count: number) => Promise<CatNumberPair[]>,
+    getUsersFavoriteBreed: (userId: string) => Promise<string>
 }
 
 
@@ -129,6 +130,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
         },
         getToysPerCat: (count) => {
             return makeGetToysPerCatCall(count);
+        },
+        getUsersFavoriteBreed: (userId) => {
+            return makeGetUsersFavoriteBreedCall(userId);
         }
     }
 });

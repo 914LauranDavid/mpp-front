@@ -41,6 +41,11 @@ function NavigationBar() {
                                 Toys per cat
                             </Button>
                         </Link>
+                        <Link to="/profile">
+                            <Button sx={{ my: 2, color: 'black', display: 'block', fontWeight: 700 }}>
+                                Profile
+                            </Button>
+                        </Link>
                     </Box>
                 </Toolbar>
             </Container>

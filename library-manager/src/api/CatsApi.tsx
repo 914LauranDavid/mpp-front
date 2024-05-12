@@ -67,3 +67,16 @@ export const makeGetToysPerCatCall = (count: number) => {
             return [] as CatNumberPair[];
         });
 }
+
+export const makeGetUsersFavoriteBreedCall = (userId: string) => {
+    return axios
+        .get(baseBackendUrl + "cats/users-favorite-breed/" + userId)
+        .then(({ data }) => {
+            return data as string;
+        })
+        .catch((error) => {
+            console.log('Error getting fav breed: ' + error);
+            console.log(userId);
+            return "";
+        });
+}
