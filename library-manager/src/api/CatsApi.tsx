@@ -56,9 +56,9 @@ export const makeUpdateCall = (id: number, newCat: Cat) => {
         .catch((error) => console.log("Couldn't update cat: " + error));
 }
 
-export const makeGetToysPerCatCall = () => {
+export const makeGetToysPerCatCall = (count: number) => {
     return axios
-        .get(baseBackendUrl + "cats/toys_per_cat")
+        .get(baseBackendUrl + "cats/toys_per_cat?count=" + count)
         .then(({ data }) => {
             return data as CatNumberPair[];
         })

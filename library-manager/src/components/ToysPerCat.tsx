@@ -7,10 +7,31 @@ function ToysPerCat() {
     const { getToysPerCat } = useCatStore();
 
     const [toysPerCat, setToysPerCat] = useState([] as CatNumberPair[]);
+    const [countToShow, setCountToShow] = useState(50);
 
     useEffect(() => {
-        getToysPerCat().then(received => setToysPerCat(received));
+        getToysPerCat(countToShow).then(received => setToysPerCat(received));
+    }, [countToShow]);
+
+
+    useEffect(() => {
+        function handleScroll() {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.body.clientHeight;
+            const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+
+            if (documentHeight - scrollTop === windowHeight) {
+                setCountToShow(countToShow => countToShow + 50);
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
+
 
     return (
         <TableContainer>
@@ -22,7 +43,7 @@ function ToysPerCat() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {toysPerCat.map(({cat, theNumber}) => (
+                    {toysPerCat.slice(0, countToShow).map(({ cat, theNumber }) => (
                         <TableRow key={cat.id}>
                             <TableCell sx={{ fontStyle: 'italic' }}>
                                 {cat.name}
