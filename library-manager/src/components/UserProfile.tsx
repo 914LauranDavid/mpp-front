@@ -3,14 +3,21 @@ import React, { useEffect, useState } from "react";
 import { useCatStore } from "../stores/CatStore";
 
 const UserProfile = () => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
+    const { user, isAuthenticated, isLoading, getAccessTokenSilently, getIdTokenClaims } = useAuth0();
     const { getUsersFavoriteBreed } = useCatStore();
 
     const [favoriteBreed, setFavoriteBreed] = useState("loading...");
 
     useEffect(() => {
-        if (user?.sub)
-            getUsersFavoriteBreed(user.sub.substring(6, user.sub.length)).then(received => setFavoriteBreed(received));
+        if (user?.sub) {
+            let userId = user?.sub;
+
+            getIdTokenClaims().then(token => {
+                console.log('token: ' + token);
+                getUsersFavoriteBreed(userId.substring(6, userId.length), token.__raw).then(received => setFavoriteBreed(received));
+            });
+
+        }
     }, [user]);
 
     if (isLoading) {
@@ -18,8 +25,6 @@ const UserProfile = () => {
     }
 
     if (isAuthenticated && user?.name) {
-        console.log(user.sub);
-
         return (
             <div>
                 <img src={user.picture} alt={user.name} />

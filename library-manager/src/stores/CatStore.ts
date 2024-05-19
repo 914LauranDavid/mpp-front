@@ -36,7 +36,7 @@ interface useCatStoreProps {
     isServerDown: boolean,
     getPendingOperations: () => UserOperation[],
     getToysPerCat: (count: number) => Promise<CatNumberPair[]>,
-    getUsersFavoriteBreed: (userId: string) => Promise<string>
+    getUsersFavoriteBreed: (userId: string, token: string) => Promise<string>
 }
 
 
@@ -131,8 +131,8 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
         getToysPerCat: (count) => {
             return makeGetToysPerCatCall(count);
         },
-        getUsersFavoriteBreed: (userId) => {
-            return makeGetUsersFavoriteBreedCall(userId);
+        getUsersFavoriteBreed: (userId, token) => {
+            return makeGetUsersFavoriteBreedCall(userId, token);
         }
     }
 });

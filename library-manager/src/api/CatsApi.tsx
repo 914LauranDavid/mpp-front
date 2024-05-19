@@ -68,9 +68,15 @@ export const makeGetToysPerCatCall = (count: number) => {
         });
 }
 
-export const makeGetUsersFavoriteBreedCall = (userId: string) => {
+export const makeGetUsersFavoriteBreedCall = (userId: string, token: string) => {
     return axios
-        .get(baseBackendUrl + "cats/users-favorite-breed/" + userId)
+        .get(baseBackendUrl + "cats/users-favorite-breed/" + userId, {
+            headers: {
+                'content-type': 'application/json',
+                accept: 'application/json',
+                Authorization: `Bearer ${token}`,
+            }
+        })
         .then(({ data }) => {
             return data as string;
         })
