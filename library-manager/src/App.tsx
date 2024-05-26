@@ -15,6 +15,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import LoginButton from "./components/authentication/LoginButton";
 import LogoutButton from "./components/authentication/LogoutButton";
 import UserProfile from "./components/UserProfile";
+import AllUsers from "./components/users/AllUsers";
 
 
 function App() {
@@ -58,6 +59,10 @@ function App() {
           <Route
             path="/profile"
             element={<UserProfile />}
+          />
+          <Route
+            path="/users"
+            element={<AllUsers />}
           />
         </Routes>
       </BrowserRouter>

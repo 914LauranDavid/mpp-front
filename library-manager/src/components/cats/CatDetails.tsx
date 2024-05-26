@@ -4,12 +4,29 @@ import { useParams } from "react-router-dom";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { useCatStore } from "../../stores/CatStore";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function CatDetails() {
+  const { user, getIdTokenClaims } = useAuth0();
+  const [isManagerOrAdmin, setIsManagerOrAdmin] = useState(false);
+
+  const { getCatById, updateCat, getUserRoleName } = useCatStore();
+
+  useEffect(() => {
+    console.log('will get claims');
+
+    getIdTokenClaims().then(tokenClaims => {
+      if (tokenClaims !== undefined) {
+        const token = tokenClaims.__raw;
+
+        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(roleName === "Manager" || roleName === "Admin"));
+      };
+    });
+  }, [user]);
+
+
   const params = useParams<{ id: string }>();
   const id = params.id;
-
-  const { getCatById, updateCat } = useCatStore();
 
   if (!id) {
     console.log("params incorrect...");
@@ -31,8 +48,12 @@ function CatDetails() {
       return;
     }
 
-    updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight });
-    getCatById(parseInt(id)).then(received => setCat(received));
+    getIdTokenClaims().then(token => {
+      if (token) {
+        updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight }, token.__raw);
+        getCatById(parseInt(id)).then(received => setCat(received));
+      }
+    });
   };
 
   const [ageInput, setAgeInput] = useState(0);
@@ -41,7 +62,10 @@ function CatDetails() {
 
     cat.age = ageInput;
 
-    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight });
+    getIdTokenClaims().then(token => {
+      if (token)
+        updateCat(parseInt(id), { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight }, token.__raw);
+    });
     getCatById(parseInt(id)).then(received => setCat(received));
   };
 
@@ -51,7 +75,11 @@ function CatDetails() {
 
     cat.weight = weightInput;
 
-    updateCat(parseInt(id), { id: cat.id, name: cat.name, age: cat.age, weight: weightInput });
+    getIdTokenClaims().then(token => {
+      if (token)
+        updateCat(parseInt(id), { id: cat.id, name: cat.name, age: cat.age, weight: weightInput }, token.__raw);
+    });
+
     getCatById(parseInt(id)).then(received => setCat(received));
   };
 
@@ -67,9 +95,9 @@ function CatDetails() {
             <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.name}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsNameInputShown(!isNameInputShown)} aria-label="openNameInput">
+              {isManagerOrAdmin && <Button onClick={() => setIsNameInputShown(!isNameInputShown)} aria-label="openNameInput">
                 <EditIcon />
-              </Button>
+              </Button>}
               {isNameInputShown && <form onSubmit={handleNewNameSubmit}>
                 <TextField
                   size="small"
@@ -88,9 +116,9 @@ function CatDetails() {
             <TableCell sx={{ fontWeight: 800, }}>Age</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.age}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsAgeInputShown(!isAgeInputShown)} aria-label="openAgeInput">
+              {isManagerOrAdmin && <Button onClick={() => setIsAgeInputShown(!isAgeInputShown)} aria-label="openAgeInput">
                 <EditIcon />
-              </Button>
+              </Button>}
               {isAgeInputShown && <form onSubmit={handleNewAgeSubmit}>
                 <TextField
                   size="small"
@@ -111,9 +139,9 @@ function CatDetails() {
             <TableCell sx={{ fontWeight: 800, }}>Weight</TableCell>
             <TableCell sx={{ fontStyle: 'italic' }}>{cat.weight}</TableCell>
             <TableCell>
-              <Button onClick={() => setIsWeightInputShown(!isWeightInputShown)} aria-label="openWeightInput">
+              {isManagerOrAdmin && <Button onClick={() => setIsWeightInputShown(!isWeightInputShown)} aria-label="openWeightInput">
                 <EditIcon />
-              </Button>
+              </Button>}
               {isWeightInputShown && <form onSubmit={handleNewWeightSubmit}>
                 <TextField
                   size="small"

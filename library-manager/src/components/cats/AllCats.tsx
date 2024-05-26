@@ -14,9 +14,26 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useEffect, useState } from "react";
 
 import { useCatStore } from "../../stores/CatStore";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 function CatsTable() {
+  const { user, getIdTokenClaims } = useAuth0();
+  const { catsOnPage, getCount, deleteCat, fetch, getUserRoleName } = useCatStore();
+  const [isManagerOrAdmin, setIsManagerOrAdmin] = useState(false);
+
+  useEffect(() => {
+    console.log('will get claims');
+
+    getIdTokenClaims().then(tokenClaims => {
+      if (tokenClaims !== undefined) {
+        const token = tokenClaims.__raw;
+
+        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(roleName === "Manager" || roleName === "Admin"));
+      };
+    });
+  }, [user]);
+
   const pageSize = 5;
 
   const [sortByNameDirection, setSortByNameDirection] = useState("asc");
@@ -26,8 +43,6 @@ function CatsTable() {
   useEffect(() => {
     getCount().then(count => setTotalCount(count))
   }, [currentPage]);
-
-  const { catsOnPage, getCount, deleteCat, fetch } = useCatStore();
 
   useEffect(() => {
     fetch(sortByNameDirection, currentPage);
@@ -56,7 +71,10 @@ function CatsTable() {
   }
 
   const handleDelete = (id: number) => {
-    deleteCat(id);
+    getIdTokenClaims().then(token => {
+      if (token)
+        deleteCat(id, token.__raw);
+    });
   }
 
   const min = (a: number, b: number) => {
@@ -82,8 +100,8 @@ function CatsTable() {
                 </TableCell>
                 <TableCell>{cat.age}</TableCell>
                 <TableCell>
-                  <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
-                    onClick={() => handleDelete(cat.id)} aria-label={`deleteIcon${cat.id}`} />
+                  {isManagerOrAdmin && <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
+                    onClick={() => handleDelete(cat.id)} aria-label={`deleteIcon${cat.id}`} />}
                 </TableCell>
               </TableRow>
             ))}

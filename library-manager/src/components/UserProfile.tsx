@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useCatStore } from "../stores/CatStore";
 
 const UserProfile = () => {
-    const { user, isAuthenticated, isLoading, getAccessTokenSilently, getIdTokenClaims } = useAuth0();
-    const { getUsersFavoriteBreed } = useCatStore();
+    const { user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0();
+    const { getUsersFavoriteBreed, getUserRoleName } = useCatStore();
 
     const [favoriteBreed, setFavoriteBreed] = useState("loading...");
+    const [userRoleName, setUserRoleName] = useState("loading...");
 
     useEffect(() => {
         if (user?.sub) {
@@ -14,7 +15,10 @@ const UserProfile = () => {
 
             getIdTokenClaims().then(token => {
                 console.log('token: ' + token);
-                getUsersFavoriteBreed(userId.substring(6, userId.length), token.__raw).then(received => setFavoriteBreed(received));
+                if (token) {
+                    getUsersFavoriteBreed(userId.substring(6, userId.length), token.__raw).then(received => setFavoriteBreed(received));
+                    getUserRoleName(token.__raw).then(received => setUserRoleName(received));
+                }
             });
 
         }
@@ -29,6 +33,7 @@ const UserProfile = () => {
             <div>
                 <img src={user.picture} alt={user.name} />
                 <h2>Your name: {user.name}</h2>
+                <h3>Role: {userRoleName}</h3>
                 <p>Your email: {user.email}</p>
                 <p>Favorite breed: {favoriteBreed} </p>
 
