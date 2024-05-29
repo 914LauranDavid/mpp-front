@@ -40,7 +40,7 @@ function UsersTable() {
         });
     }
 
-    const [roleInput, setRoleInput] = useState<{ [key: number]: string }>({});
+    const [roleInput] = useState<{ [key: number]: string }>({});
     const handleNewRoleSubmit = (userId: string, role: string) => {
         getIdTokenClaims().then(token => {
             if (token) {

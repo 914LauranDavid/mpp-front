@@ -205,6 +205,7 @@ describe('user management', () => {
       });
 
     cy.contains('All users').click();
+    cy.wait(1000);
     cy.contains('td', newUserInitialName).parent('tr').within(() => {
       cy.contains('Regular User').click();
     });
