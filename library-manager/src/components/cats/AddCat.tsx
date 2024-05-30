@@ -39,13 +39,15 @@ function AddCat() {
         <TextField
           id="ageInput"
           placeholder="Age"
-          inputProps={{ type: "number" }}
+          inputProps={{ type: "number", min: 1 }}
+          defaultValue={age}
           onChange={(e) => setAge(parseInt(e.target.value))}
         />
         <TextField
           id="weightInput"
           placeholder="Weight"
-          inputProps={{ type: "number", step: "0.1" }}
+          inputProps={{ type: "number", step: "0.1", min: 1 }}
+          defaultValue={weight}
           onChange={(e) => setWeight(parseFloat(e.target.value))}
         />
         <Button type="submit" aria-label="submitAddCatButton">

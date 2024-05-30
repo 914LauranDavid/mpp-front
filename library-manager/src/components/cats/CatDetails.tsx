@@ -60,6 +60,11 @@ function CatDetails() {
   const handleNewAgeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (ageInput < 0) {
+      alert('Age cannot be negative');
+      return;
+    }
+
     cat.age = ageInput;
 
     getIdTokenClaims().then(token => {
@@ -72,6 +77,11 @@ function CatDetails() {
   const [weightInput, setWeightInput] = useState(0);
   const handleNewWeightSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (weightInput < 0) {
+      alert('Weight cannot be negative');
+      return;
+    }
 
     cat.weight = weightInput;
 
@@ -125,7 +135,7 @@ function CatDetails() {
                   id="ageInput"
                   aria-label="ageInput"
                   placeholder="New age"
-                  inputProps={{ type: "number" }}
+                  inputProps={{ type: "number", min: 0 }}
                   value={ageInput}
                   onChange={(e) => setAgeInput(parseInt(e.target.value))}
                 />
@@ -147,7 +157,7 @@ function CatDetails() {
                   size="small"
                   id="weightnput"
                   placeholder="New weight"
-                  inputProps={{ type: "number", step: "0.1" }}
+                  inputProps={{ type: "number", step: "0.1", min: 0 }}
                   value={weightInput}
                   onChange={(e) => setWeightInput(parseFloat(e.target.value))}
                 />

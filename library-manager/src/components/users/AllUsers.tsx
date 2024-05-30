@@ -71,6 +71,7 @@ function UsersTable() {
         const newName = newNameInputs[userId];
 
         if (!newName || newName.trim() === "") {
+            alert('Name cannot be empty');  
             return;
         }
 

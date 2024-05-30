@@ -8,6 +8,7 @@ function AgeDistribution() {
 
     useEffect(() => {
         fetch("asc", 0);
+        console.log('catsonpage: ' + JSON.stringify(allCats));
     }, []);
 
     const data: { id: number; value: number; label: string; }[] = [];

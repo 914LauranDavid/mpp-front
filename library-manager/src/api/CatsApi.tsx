@@ -47,7 +47,10 @@ export const makeGetByIdCall = (id: number) => {
 export const makeAddCall = (newCat: CatWithoutId, token: string) => {
     console.log('makeaddcall: token=' + JSON.stringify(token));
     return axios.post(baseBackendUrl + "cats/add/", newCat, getRequestConfigWithToken(token))
-        .catch((error) => console.log("Couldn't add cat: " + error));
+        .catch((error) => {
+            console.log("Couldn't add cat: " + error);
+            alert('Backend error: ' + error);
+        });
 }
 
 export const makeDeleteCall = (id: number, token: string) => {
@@ -131,7 +134,7 @@ export const makeAddUserCall = (user: UserToBeCreated, token: string) => {
     console.log('makeaddusercall: token=' + JSON.stringify(token));
 
     return axios.post(baseBackendUrl + "users/create", user, getRequestConfigWithToken(token))
-        .catch((error) => console.log("Couldn't add user: " + error));
+        .catch((error) => alert("Invalid user: " + error));
 }
 
 export const makeDeleteUserCall = (userId: string, token: string) => {
