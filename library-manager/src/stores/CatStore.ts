@@ -126,15 +126,21 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
         },
         deleteCat: (id: number, token: string) => {
             makeDeleteCall(id, token).then((response) => {
-                if (response === undefined) {
+                if (response === undefined || response.code === "ERR_NETWORK") {
+                    console.log('will add delete to pending. response: ' + JSON.stringify(response));
+                    console.log('will add delete to pending. response status: ' + JSON.stringify(response["status"]));
+
                     pendingOperations.push({ type: deleteOperationCode, id: id, cat: errorCat, token: token });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
-                } else {
-                    console.log('deleted response: ' + response);
+                } else if (response.code === "ERR_BAD_REQUEST") {
+                    alert('You wont delete this cat, she/he has toys');
+                }
+                else {
+                    console.log('deleted response: ' + JSON.stringify(response));
                 }
 
                 get().fetch(lastSortDirection, lastFetchedPage);
-            });
+            }).catch();
         },
         updateCat: (id: number, newCat: Cat, token: string) => {
             makeUpdateCall(id, newCat, token).then((response) => {

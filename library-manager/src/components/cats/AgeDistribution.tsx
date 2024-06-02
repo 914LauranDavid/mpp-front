@@ -30,6 +30,7 @@ function AgeDistribution() {
                 ]}
                 width={700}
                 height={300}
+                data-testid="age-distribution-chart"
             />
         </Box>
     );

@@ -4,7 +4,8 @@ import { CatNumberPair } from "../stores/CatStore";
 import { getRequestConfigWithToken } from "../auth/TokenHandler";
 import { RawUser, UserToBeCreated } from "../domain/User";
 
-const baseBackendUrl = "http://localhost:3000/";
+// const baseBackendUrl = "http://localhost:3000/";
+const baseBackendUrl = "https://localhost:4443/";
 // const baseBackendUrl = "https://cat-app-backend-7a809be297e0.herokuapp.com/";
 
 export const makeAllCall = (sortByNameDirection: string, page: number) => {
