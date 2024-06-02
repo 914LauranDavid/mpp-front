@@ -4,7 +4,7 @@ import {
     makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall,
     makeGetUsersFavoriteBreedCall, makeUpdateCall, makeGetUserRoleNameCall, makeGetAllUsersCall,
     makeGetOthersRoleNameCall, makeAddUserCall, makeDeleteUserCall, makeUpdateUserRoleCall,
-    makeUpdateUserNameCall
+    makeUpdateUserNameCall, makeAgeDistributionCall
 } from "../api/CatsApi";
 import { User, UserToBeCreated } from "../domain/User";
 
@@ -29,6 +29,11 @@ export interface CatNumberPair {
     theNumber: number
 }
 
+export interface AgeAndCount {
+    age: number,
+    count: number
+}
+
 interface useCatStoreProps {
     catsOnPage: Cat[],
     fetch: (sortByNameDirection: string, page: number) => void,
@@ -47,7 +52,9 @@ interface useCatStoreProps {
     addUser: (user: UserToBeCreated, token: string) => void,
     deleteUser: (email: string, token: string) => void,
     updateUserRole: (userId: string, newRole: string, token: string) => void,
-    updateUserName: (userId: string, newName: string, token: string) => void
+    updateUserName: (userId: string, newName: string, token: string) => void,
+    ageDistribution: AgeAndCount[],
+    fetchAgeDistribution: () => void
 }
 
 
@@ -122,6 +129,8 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
                 if (response === undefined) {
                     pendingOperations.push({ type: deleteOperationCode, id: id, cat: errorCat, token: token });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
+                } else {
+                    console.log('deleted response: ' + response);
                 }
 
                 get().fetch(lastSortDirection, lastFetchedPage);
@@ -176,6 +185,22 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
         updateUserName: (userId, newName, token) => {
             console.log('store token=' + JSON.stringify(token));
             makeUpdateUserNameCall(userId, newName, token);
-        }
+        },
+        ageDistribution: [],
+        fetchAgeDistribution: () => {
+            return makeAgeDistributionCall().then(result => {
+                set(() => ({ ageDistribution: result }));
+
+                if (result.length === 1 && result[0] === errorCat) {
+                    console.log(`catStore: makeAgeDistributionCall returned error`);
+                    set(({ isServerDown: true }));
+                    // set(() => ({ catsOnPage: cachedCats }));
+                } else {
+                    set(({ isServerDown: false }));
+                    // cachedCats = JSON.parse(JSON.stringify(result));
+                    processPendingOperations();
+                }
+            });
+        },
     }
 });

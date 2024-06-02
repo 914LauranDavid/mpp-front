@@ -4,24 +4,19 @@ import { useCatStore } from "../../stores/CatStore";
 import { useEffect } from 'react';
 
 function AgeDistribution() {
-    const { catsOnPage: allCats, fetch } = useCatStore();
+    const { ageDistribution, fetchAgeDistribution } = useCatStore();
 
     useEffect(() => {
-        fetch("asc", 0);
-        console.log('catsonpage: ' + JSON.stringify(allCats));
+        fetchAgeDistribution();
+        console.log('agedistribution: ' + JSON.stringify(ageDistribution));
     }, []);
 
     const data: { id: number; value: number; label: string; }[] = [];
-    allCats.map(cat => {
-        let found = false;
-        for (let pieceOfData of data)
-            if (pieceOfData.label === "" + cat.age + " year olds") {
-                pieceOfData.value++;
-                found = true;
-            }
-        if (!found)
-            data.push({ id: cat.id, value: 1, label: "" + cat.age + " year olds" });
-    })
+    ageDistribution.map(ageAndCount => {
+        let age = ageAndCount.age;
+        let count = ageAndCount.count;
+        data.push({id: age, value: count, label: "" + age + " year olds"});
+    });
 
     return (
         <Box sx={{ bgcolor: '#f8faca' }}>

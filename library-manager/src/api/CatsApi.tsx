@@ -55,7 +55,8 @@ export const makeAddCall = (newCat: CatWithoutId, token: string) => {
 
 export const makeDeleteCall = (id: number, token: string) => {
     return axios.delete(baseBackendUrl + "cats/delete/" + id, getRequestConfigWithToken(token))
-        .catch((error) => console.log("Couldn't delete cat: " + error));
+        .then(response => { return response; })
+        .catch((error) => { console.log("Couldn't delete cat: " + error); return error; });
 }
 
 export const makeUpdateCall = (id: number, newCat: Cat, token: string) => {
@@ -160,4 +161,17 @@ export const makeUpdateUserNameCall = (userId: string, newName: string, token: s
         getRequestConfigWithToken(token)
     )
         .catch((error) => console.log("Couldn't update users name: " + error));
+}
+
+export const makeAgeDistributionCall = () => {
+    return axios
+        .get(baseBackendUrl + "cats/age-distribution")
+        .then(({ data }) => {
+            console.log('age distrib result: ' + data);
+            return data;
+        })
+        .catch((error) => {
+            console.log("Error getting age distrib: " + error);
+            return [];
+        });
 }
