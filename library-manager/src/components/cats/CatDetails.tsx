@@ -155,7 +155,8 @@ function CatDetails() {
               {isWeightInputShown && <form onSubmit={handleNewWeightSubmit}>
                 <TextField
                   size="small"
-                  id="weightnput"
+                  id="weightInput"
+                  aria-label="weightInput"
                   placeholder="New weight"
                   inputProps={{ type: "number", step: "0.1", min: 0 }}
                   value={weightInput}

@@ -7,6 +7,7 @@ import { RawUser, UserToBeCreated } from "../domain/User";
 // const baseBackendUrl = "http://localhost:3000/";
 const baseBackendUrl = "https://localhost:4443/";
 // const baseBackendUrl = "https://cat-app-backend-7a809be297e0.herokuapp.com/";
+// const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
 
 export const makeAllCall = (sortByNameDirection: string, page: number) => {
     return axios

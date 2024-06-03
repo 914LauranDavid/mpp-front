@@ -71,6 +71,7 @@ function UsersTable() {
         const newName = newNameInputs[userId];
 
         if (!newName || newName.trim() === "") {
+            console.log('Name was empty!!');
             alert('Name cannot be empty');  
             return;
         }
@@ -84,6 +85,7 @@ function UsersTable() {
     };
 
     const handleNewNameChange = (userId: string, value: string) => {
+        console.log('we are in handlenewnamechange');
         setNewNameInputs(prevState => ({ ...prevState, [userId]: value }));
     };
 
@@ -107,12 +109,13 @@ function UsersTable() {
                                     <form onSubmit={(e) => { e.preventDefault(); handleNewNameSubmit(user.id); }}>
                                         <TextField
                                             id={`newNameInput-${user.id}`}
+                                            data-testid={`newNameInput-${user.id}`}
                                             placeholder="New name"
                                             size="small"
                                             value={newNameInputs[user.id] || ""}
                                             onChange={(e) => handleNewNameChange(user.id, e.target.value)}
                                         />
-                                        <Button type="submit" aria-label="submitName">
+                                        <Button type="submit" aria-label="submitName" data-testid={`newNameButton-${user.id}`}>
                                             <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                                         </Button>
                                     </form>
@@ -135,6 +138,7 @@ function UsersTable() {
                                         <Select
                                             labelId={`role-select-label-${user.id}`}
                                             id={`role-select-${user.id}`}
+                                            data-testid={`role-select-${user.id}`}
                                             value={user.role}
                                             onChange={(e) => handleNewRoleSubmit(user.id, e.target.value as string)}
                                         >
@@ -146,7 +150,8 @@ function UsersTable() {
                                 </TableCell>
                                 <TableCell>
                                     <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
-                                        onClick={() => handleDelete(user.id)} aria-label={`deleteIcon${user.id}`} />
+                                        onClick={() => handleDelete(user.id)} aria-label={`deleteIcon${user.id}`}
+                                        />
                                 </TableCell>
                             </TableRow>
                         ))}
