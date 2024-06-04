@@ -50,8 +50,10 @@ function CatDetails() {
 
     getIdTokenClaims().then(token => {
       if (token) {
-        updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight }, token.__raw);
-        getCatById(parseInt(id)).then(received => setCat(received));
+        updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight }, token.__raw)
+          .then(() => {
+            getCatById(parseInt(id)).then(received => setCat(received));
+          });
       }
     });
   };

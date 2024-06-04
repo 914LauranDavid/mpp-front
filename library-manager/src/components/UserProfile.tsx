@@ -32,7 +32,6 @@ const UserProfile = () => {
         return (
             <div>
                 <img src={user.picture} alt={user.name} />
-                <h2>Your name: {user.name}</h2>
                 <h3>Role: {userRoleName}</h3>
                 <p>Your email: {user.email}</p>
                 <p>Favorite breed: {favoriteBreed} </p>

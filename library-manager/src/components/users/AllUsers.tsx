@@ -61,10 +61,6 @@ function UsersTable() {
         });
     }
 
-    // const handleRoleInputChange = (userIndex: number, value: string) => {
-    //     setRoleInput(prev => ({ ...prev, [userIndex]: value }));
-    // };
-
     const [newNameInputs, setNewNameInputs] = useState<{ [key: string]: string }>({});
 
     const handleNewNameSubmit = (userId: string) => {

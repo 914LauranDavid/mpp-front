@@ -5,13 +5,13 @@ import { getRequestConfigWithToken } from "../auth/TokenHandler";
 import { RawUser, UserToBeCreated } from "../domain/User";
 
 // const baseBackendUrl = "http://localhost:3000/";
-const baseBackendUrl = "https://localhost:4443/";
+// const baseBackendUrl = "https://localhost:4443/";
 // const baseBackendUrl = "https://cat-app-backend-7a809be297e0.herokuapp.com/";
-// const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
+const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
 
 export const makeAllCall = (sortByNameDirection: string, page: number) => {
     return axios
-        .get(baseBackendUrl + "cats/all?sortByNameDirection=" + sortByNameDirection + "&page=" + page)
+        .get(baseBackendUrl + "cats?sortByNameDirection=" + sortByNameDirection + "&page=" + page)
         .then(({ data }) => {
             console.log('all call result: ' + data);
             return data;
@@ -48,7 +48,7 @@ export const makeGetByIdCall = (id: number) => {
 
 export const makeAddCall = (newCat: CatWithoutId, token: string) => {
     console.log('makeaddcall: token=' + JSON.stringify(token));
-    return axios.post(baseBackendUrl + "cats/add/", newCat, getRequestConfigWithToken(token))
+    return axios.post(baseBackendUrl + "cats/", newCat, getRequestConfigWithToken(token))
         .catch((error) => {
             console.log("Couldn't add cat: " + error);
             alert('Backend error: ' + error);
@@ -56,17 +56,18 @@ export const makeAddCall = (newCat: CatWithoutId, token: string) => {
 }
 
 export const makeDeleteCall = (id: number, token: string) => {
-    return axios.delete(baseBackendUrl + "cats/delete/" + id, getRequestConfigWithToken(token))
+    return axios.delete(baseBackendUrl + "cats/" + id, getRequestConfigWithToken(token))
         .then(response => { return response; })
         .catch((error) => { console.log("Couldn't delete cat: " + error); return error; });
 }
 
 export const makeUpdateCall = (id: number, newCat: Cat, token: string) => {
     return axios.put(
-        baseBackendUrl + "cats/update/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight },
+        baseBackendUrl + "cats/" + id, { name: newCat.name, age: newCat.age, weight: newCat.weight },
         getRequestConfigWithToken(token)
     )
-        .catch((error) => console.log("Couldn't update cat: " + error));
+        .then(() => true)
+        .catch((error) => { console.log("Couldn't update cat: " + error); return false; });
 }
 
 export const makeGetToysPerCatCall = (count: number) => {

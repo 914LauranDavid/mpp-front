@@ -42,7 +42,7 @@ function CatsTable() {
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
     getCount().then(count => setTotalCount(count))
-  }, [currentPage]);
+  }, [currentPage, catsOnPage]);
 
   useEffect(() => {
     fetch(sortByNameDirection, currentPage);

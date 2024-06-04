@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { CatNumberPair, useCatStore } from "../stores/CatStore";
 
 function ToysPerCat() {
-    //   const { getCatById, updateCat } = useCatStore();
     const { getToysPerCat } = useCatStore();
 
     const [toysPerCat, setToysPerCat] = useState([] as CatNumberPair[]);
@@ -20,7 +19,7 @@ function ToysPerCat() {
             const documentHeight = document.body.clientHeight;
             const scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
 
-            if (documentHeight - scrollTop === windowHeight) {
+            if (Math.abs(documentHeight - scrollTop - windowHeight) < 5) {
                 setCountToShow(countToShow => countToShow + 50);
             }
         }

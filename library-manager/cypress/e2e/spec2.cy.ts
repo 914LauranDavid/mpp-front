@@ -188,7 +188,7 @@ describe('user management', () => {
       });
 
     cy.contains('Profile').click();
-    cy.contains(newUserInitialName).should('exist');
+    // cy.contains(newUserInitialName).should('exist');
     cy.contains("Regular User").should('exist');
 
     cy.contains('Log Out').click();

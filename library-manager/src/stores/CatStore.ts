@@ -41,7 +41,7 @@ interface useCatStoreProps {
     getCount: () => Promise<number>,
     addCat: (cat: CatWithoutId, token: string) => void,
     deleteCat: (id: number, token: string) => void,
-    updateCat: (id: number, newCat: Cat, token: string) => void,
+    updateCat: (id: number, newCat: Cat, token: string) => Promise<boolean>,
     getCatById: (id: number) => Promise<Cat>,
     isServerDown: boolean,
     getPendingOperations: () => UserOperation[],
@@ -87,6 +87,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
     return {
         catsOnPage: [],
         fetch: (sortByNameDirection: string, page: number) => {
+            if (page === 0)
+                return;
+
             lastFetchedPage = page;
             lastSortDirection = sortByNameDirection;
 
@@ -143,13 +146,15 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             }).catch();
         },
         updateCat: (id: number, newCat: Cat, token: string) => {
-            makeUpdateCall(id, newCat, token).then((response) => {
+            return makeUpdateCall(id, newCat, token).then((response) => {
                 if (response === undefined) {
                     pendingOperations.push({ type: updateOperationCode, id: id, cat: newCat, token: token });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
+                    return false;
                 }
 
                 get().fetch(lastSortDirection, lastFetchedPage);
+                return response;
             });
         },
         isServerDown: false,

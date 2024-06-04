@@ -55,12 +55,6 @@ function AddUser() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                {/* <TextField
-                    id="roleIdInput"
-                    placeholder="Role"
-                    inputProps={{ type: "number" }}
-                    onChange={(e) => setRoleId(parseInt(e.target.value))}
-                /> */}
                 <Select
                     id="roleSelect"
                     value={role}

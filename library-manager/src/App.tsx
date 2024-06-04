@@ -31,7 +31,6 @@ function App() {
     >
       <BrowserRouter>
         <NetworkStatus />
-        {/* {isServerDown && <div>Server is down</div>} */}
         <ServerStatus />
         <NavigationBar />
         <Routes>
