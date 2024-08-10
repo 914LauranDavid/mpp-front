@@ -3,11 +3,13 @@ import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
 import { CatNumberPair } from "../stores/CatStore";
 import { getRequestConfigWithToken } from "../auth/TokenHandler";
 import { RawUser, UserToBeCreated } from "../domain/User";
+import { CatQuizQuestion } from "../components/cats/OwnedCatDetails";
 
 // const baseBackendUrl = "http://localhost:3000/";
 // const baseBackendUrl = "https://localhost:4443/";
 // const baseBackendUrl = "https://cat-app-backend-7a809be297e0.herokuapp.com/";
 const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
+// const baseBackendUrl = "http://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:3000/";
 
 export const makeAllCall = (sortByNameDirection: string, page: number) => {
     return axios
@@ -108,6 +110,19 @@ export const makeGetUserRoleNameCall = (token: string) => {
         });
 }
 
+export const makeGetUserMoneyCall = (token: string) => {
+    return axios
+        .get(baseBackendUrl + "users/money/", getRequestConfigWithToken(token))
+        .then(({ data }) => {
+            console.log('user money ok: ' + data);
+            return data as number;
+        })
+        .catch((error) => {
+            console.log('Error getting user money: ' + error);
+            return -1;
+        });
+}
+
 export const makeGetAllUsersCall = (token: string) => {
     return axios
         .get(baseBackendUrl + "users/get-all", getRequestConfigWithToken(token))
@@ -176,5 +191,98 @@ export const makeAgeDistributionCall = () => {
         .catch((error) => {
             console.log("Error getting age distrib: " + error);
             return [];
+        });
+}
+
+export const makeGetMyCatsCall = (token: string) => {
+    console.log('in catsapi, token=' + token);
+    return axios
+        .get(baseBackendUrl + "cats/mine", getRequestConfigWithToken(token))
+        .then(({ data }) => {
+            return data as Cat[];
+        })
+        .catch((error) => {
+            console.log('Error getting my cats: ' + error);
+            return [];
+        });
+}
+
+export const makeBuyCatCall = (catId: number, token: string) => {
+    console.log('catsapi buycall');
+    return axios.post(baseBackendUrl + "cats/buy", { catId: catId }, getRequestConfigWithToken(token))
+        .catch((error) => alert("Invalid buying: " + error));
+}
+
+export const makeProcessBoughtMoneyCall = (token: string) => {
+    console.log('catsapi process bought call');
+    return axios.post(baseBackendUrl + "users/process-bought-money", {}, getRequestConfigWithToken(token))
+        .catch((error) => alert("Invalid processing bought money: " + error));
+}
+
+export const makeUpdateCatCuteness = (catId: number, newCuteness: number) => {
+    return axios.put(
+        baseBackendUrl + "cats/update-cuteness/" + catId, { newCuteness: newCuteness }
+    )
+        .then(() => true)
+        .catch((error) => { console.log("Couldn't update cat's cuteness: " + error); return false; });
+}
+
+export const makeGetQuizQuestionsCall = () => {
+    console.log('we in api getquizq');
+    return axios.post(
+        baseBackendUrl + 'cats/quiz-questions/'
+    )
+        .then(({ data }) => {
+            console.log('quiz questions result: ' + JSON.stringify(data));
+
+            let questions: CatQuizQuestion[] = [];
+            for (let oneGivenQuestion of data)
+                questions.push({ question: oneGivenQuestion.question, options: oneGivenQuestion.options, answer: oneGivenQuestion.answer })
+
+            return questions;
+
+            // const questions: CatQuizQuestion[] = [];
+            // data.fore
+
+            // return data as CatQuizQuestion[];
+        })
+        .catch((error) => {
+            console.log("Error getting quiz questions: " + error);
+            return [] as CatQuizQuestion[];
+        });
+}
+
+export const makeGetLeaderbordCall = () => {
+    return axios
+        .get(baseBackendUrl + "users/leaderboard")
+        .then(({ data }) => {
+            console.log('api leaderboard result: ' + JSON.stringify(data));
+            return data;
+        })
+        .catch((error) => {
+            console.log("Error getting leaderboard: " + error);
+            return [];
+        });
+}
+
+export const makeSetCatAvatarCall = (catId: number, prompt: string, token: string) => {
+    console.log(`makeSetCatAvatarCall: id=${catId}, prompt=${prompt}, token=${token}`);
+    return axios.post(baseBackendUrl + "cats/set-avatar", { catId: catId, prompt: prompt }, getRequestConfigWithToken(token))
+        .then(({ data }) => {
+            console.log('set avatar response: ' + JSON.stringify(data));
+            return data;
+        })
+        .catch((error) => alert("Invalid set cat avatar: " + error));
+}
+
+export const makeGetMyCutestCatCall = (token: string) => {
+    return axios
+        .get(baseBackendUrl + "cats/my-cutest", getRequestConfigWithToken(token))
+        .then(({ data }) => {
+            return data as Cat;
+        })
+        .catch((error) => {
+            console.log('Error getting my cutest cat: ' + error);
+            return errorCat;
         });
 }

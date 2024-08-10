@@ -15,11 +15,19 @@ import LoginButton from "./components/authentication/LoginButton";
 import LogoutButton from "./components/authentication/LogoutButton";
 import UserProfile from "./components/UserProfile";
 import AllUsers from "./components/users/AllUsers";
-
+import { useState } from "react";
+import Screensaver from "./components/Screensaver";
+import MyCats from "./components/cats/MyCats";
+import OwnedCatDetails from "./components/cats/OwnedCatDetails";
+import CutenessLeaderboard from "./components/cats/CutenessLeaderboard";
 
 function App() {
   initializeWebSocket();
-  // const { user, isAuthenticated, isLoading } = useAuth0();
+  const [isScreensaver, setIsScreensaver] = useState(false);
+
+  const handleScreensaverToggle = () => {
+    setIsScreensaver(prevState => !prevState);
+  };
 
   return (
     <Auth0Provider
@@ -30,43 +38,31 @@ function App() {
       }}
     >
       <BrowserRouter>
-        <NetworkStatus />
-        <ServerStatus />
-        <NavigationBar />
-        <Routes>
-          <Route
-            path="/cats"
-            element={<AllCats />}
-          />
-          <Route
-            path="/cat/add"
-            element={<AddCat />}
-          />
-          <Route
-            path="/cats/:id"
-            element={<CatDetails />}
-          />
-          <Route
-            path="/cat/age_distribution"
-            element={<AgeDistribution />}
-          />
-          <Route
-            path="/cat/toys_per_cat"
-            element={<ToysPerCat />}
-          />
-          <Route
-            path="/profile"
-            element={<UserProfile />}
-          />
-          <Route
-            path="/users"
-            element={<AllUsers />}
-          />
-        </Routes>
+        {isScreensaver ? (
+          <Screensaver onExit={handleScreensaverToggle} />
+        ) : (
+          <>
+            <NetworkStatus />
+            <ServerStatus />
+            <NavigationBar onToggleScreensaver={handleScreensaverToggle} />
+            <Routes>
+              <Route path="/cats" element={<AllCats />} />
+              <Route path="/cat/add" element={<AddCat />} />
+              <Route path="/cats/:id" element={<CatDetails />} />
+              <Route path="/cat/age_distribution" element={<AgeDistribution />} />
+              <Route path="/cat/toys_per_cat" element={<ToysPerCat />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/users" element={<AllUsers />} />
+              <Route path="/my-cats" element={<MyCats />} />
+              <Route path="/my-cats/:id" element={<OwnedCatDetails />} />
+              <Route path="/leaderboard" element={<CutenessLeaderboard />} />
+            </Routes>
+            <br />
+            <LoginButton />
+            <LogoutButton />
+          </>
+        )}
       </BrowserRouter>
-
-      <LoginButton />
-      <LogoutButton />
     </Auth0Provider>
   );
 }

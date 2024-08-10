@@ -20,6 +20,7 @@ import { User } from "../../domain/User";
 import AddUser from "./AddUser";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import SillyLoading from "../utilities/SillyLoading";
 
 
 function UsersTable() {
@@ -68,7 +69,7 @@ function UsersTable() {
 
         if (!newName || newName.trim() === "") {
             console.log('Name was empty!!');
-            alert('Name cannot be empty');  
+            alert('Name cannot be empty');
             return;
         }
 
@@ -87,42 +88,44 @@ function UsersTable() {
 
     return (
         <div>
-            <TableContainer>
-                <Table sx={{ minWidth: "50%" }}>
-                    <TableHead >
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
-                            <TableCell sx={{ fontWeight: 800, }}>Email</TableCell>
-                            <TableCell sx={{ fontWeight: 800, }}>Role</TableCell>
-                            <TableCell sx={{ fontWeight: 800, }}></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {allUsers.map((user, userIndex) => (
-                            <TableRow key={user.id}>
-                                <TableCell sx={{}}>
-                                    {user.name}
-                                    <form onSubmit={(e) => { e.preventDefault(); handleNewNameSubmit(user.id); }}>
-                                        <TextField
-                                            id={`newNameInput-${user.id}`}
-                                            data-testid={`newNameInput-${user.id}`}
-                                            placeholder="New name"
-                                            size="small"
-                                            value={newNameInputs[user.id] || ""}
-                                            onChange={(e) => handleNewNameChange(user.id, e.target.value)}
-                                        />
-                                        <Button type="submit" aria-label="submitName" data-testid={`newNameButton-${user.id}`}>
-                                            <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
-                                        </Button>
-                                    </form>
-                                </TableCell>
-                                <TableCell>
-                                    {user.email}
-                                </TableCell>
-                                <TableCell>
-                                    {user.role}
-                                    <form onSubmit={(e) => { e.preventDefault(); handleNewRoleSubmit(user.id, roleInput[userIndex]); }}>
-                                        {/* <TextField
+            {allUsers.length > 0 ?
+                (
+                    <TableContainer>
+                        <Table sx={{ minWidth: "50%" }}>
+                            <TableHead >
+                                <TableRow>
+                                    <TableCell sx={{ fontWeight: 800, }}>Name</TableCell>
+                                    <TableCell sx={{ fontWeight: 800, }}>Email</TableCell>
+                                    <TableCell sx={{ fontWeight: 800, }}>Role</TableCell>
+                                    <TableCell sx={{ fontWeight: 800, }}></TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {allUsers.map((user, userIndex) => (
+                                    <TableRow key={user.id}>
+                                        <TableCell sx={{}}>
+                                            {user.name}
+                                            <form onSubmit={(e) => { e.preventDefault(); handleNewNameSubmit(user.id); }}>
+                                                <TextField
+                                                    id={`newNameInput-${user.id}`}
+                                                    data-testid={`newNameInput-${user.id}`}
+                                                    placeholder="New name"
+                                                    size="small"
+                                                    value={newNameInputs[user.id] || ""}
+                                                    onChange={(e) => handleNewNameChange(user.id, e.target.value)}
+                                                />
+                                                <Button type="submit" aria-label="submitName" data-testid={`newNameButton-${user.id}`}>
+                                                    <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
+                                                </Button>
+                                            </form>
+                                        </TableCell>
+                                        <TableCell>
+                                            {user.email}
+                                        </TableCell>
+                                        <TableCell>
+                                            {user.role}
+                                            <form onSubmit={(e) => { e.preventDefault(); handleNewRoleSubmit(user.id, roleInput[userIndex]); }}>
+                                                {/* <TextField
                                             size="small"
                                             id={"roleInput" + userIndex}
                                             value={roleInput[userIndex]}
@@ -131,30 +134,36 @@ function UsersTable() {
                                         <Button type="submit" aria-label="submitName">
                                             <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
                                         </Button> */}
-                                        <Select
-                                            labelId={`role-select-label-${user.id}`}
-                                            id={`role-select-${user.id}`}
-                                            data-testid={`role-select-${user.id}`}
-                                            value={user.role}
-                                            onChange={(e) => handleNewRoleSubmit(user.id, e.target.value as string)}
-                                        >
-                                            <MenuItem value="Admin">Admin</MenuItem>
-                                            <MenuItem value="Manager">Manager</MenuItem>
-                                            <MenuItem value="Regular User">Regular User</MenuItem>
-                                        </Select>
-                                    </form>
-                                </TableCell>
-                                <TableCell>
-                                    <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
-                                        onClick={() => handleDelete(user.id)} aria-label={`deleteIcon${user.id}`}
-                                        />
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <AddUser />
+                                                <Select
+                                                    labelId={`role-select-label-${user.id}`}
+                                                    id={`role-select-${user.id}`}
+                                                    data-testid={`role-select-${user.id}`}
+                                                    value={user.role}
+                                                    onChange={(e) => handleNewRoleSubmit(user.id, e.target.value as string)}
+                                                >
+                                                    <MenuItem value="Admin">Admin</MenuItem>
+                                                    <MenuItem value="Manager">Manager</MenuItem>
+                                                    <MenuItem value="Regular User">Regular User</MenuItem>
+                                                </Select>
+                                            </form>
+                                        </TableCell>
+                                        <TableCell>
+                                            <DeleteForeverIcon sx={{ cursor: 'pointer', color: 'red', }}
+                                                onClick={() => handleDelete(user.id)} aria-label={`deleteIcon${user.id}`}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )
+                :
+                (
+                    <SillyLoading />
+                )
+            }
+            < AddUser />
         </div>
     );
 }

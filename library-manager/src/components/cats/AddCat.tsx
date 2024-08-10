@@ -1,5 +1,4 @@
 import { Box, Button, TextField } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
 import { useCatStore } from "../../stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -16,42 +15,56 @@ function AddCat() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (name.length == 0) {
+    if (name.length === 0) {
       alert('Name cannot be empty');
       return;
     }
 
     getIdTokenClaims().then(token => {
       if (token)
-        addCat({ name: name, age: age, weight: weight }, token.__raw);
+        addCat({ name: name, age: age, weight: weight, cuteness: 5, ownerId: "", avatarUrl: "" }, token.__raw);
     });
   };
 
   return (
-    <Box sx={{ bgcolor: '#f8faca' }}>
+    <Box sx={{ bgcolor: '#f8faca', p: 2 }}>
       <form onSubmit={handleSubmit}>
-        <TextField
-          id="nameInput"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          id="ageInput"
-          placeholder="Age"
-          inputProps={{ type: "number", min: 1 }}
-          defaultValue={age}
-          onChange={(e) => setAge(parseInt(e.target.value))}
-        />
-        <TextField
-          id="weightInput"
-          placeholder="Weight"
-          inputProps={{ type: "number", step: "0.1", min: 1 }}
-          defaultValue={weight}
-          onChange={(e) => setWeight(parseFloat(e.target.value))}
-        />
-        <Button type="submit" aria-label="submitAddCatButton">
-          <AddCircleOutlineIcon aria-label="addIcon" />
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            id="nameInput"
+            label="Name"
+            placeholder="Enter cat's name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            id="ageInput"
+            label="Age (in years)"
+            placeholder="Enter cat's age"
+            type="number"
+            inputProps={{ min: 1 }}
+            value={age}
+            onChange={(e) => setAge(parseInt(e.target.value))}
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mb: 2 }}>
+          <TextField
+            id="weightInput"
+            label="Weight (in kg)"
+            placeholder="Enter cat's weight"
+            type="number"
+            inputProps={{ step: "0.1", min: 1 }}
+            value={weight}
+            onChange={(e) => setWeight(parseFloat(e.target.value))}
+            fullWidth
+          />
+        </Box>
+        <Button type="submit" variant="contained" color="primary">
+          Add Cat
         </Button>
       </form>
     </Box>

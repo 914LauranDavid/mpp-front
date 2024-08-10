@@ -9,10 +9,9 @@ function ServerStatus() {
             isServerDown ? { color: 'red', bgcolor: 'ivory', textAlign: 'left', padding: '1%' }
                 : { color: '#36454f', bgcolor: 'ivory', textAlign: 'left', padding: '1%' }
         }>
-            {isServerDown ? "Server is down" : "Server is up"}
-            . You have {getPendingOperations().length} pending operations.
+            {isServerDown ? `Server is down. You have ${getPendingOperations().length} pending operations.` : "Server is up"}
         </Box>
-    ) // TODO only show no. of pending op. if server down and >0
+    )
 }
 
 export default ServerStatus;
