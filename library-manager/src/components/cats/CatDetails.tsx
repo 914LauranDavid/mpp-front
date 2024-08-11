@@ -33,7 +33,7 @@ function CatDetails() {
     return <h1>The parameters are incorrect</h1>;
   }
 
-  const [cat, setCat] = useState({ id: parseInt(id), name: "", age: -1, weight: -1 });
+  const [cat, setCat] = useState({ id: parseInt(id), name: "", age: -1, weight: -1, cuteness: -1, ownerId: "", avatarUrl: "" });
 
   useEffect(() => {
     getCatById(parseInt(id)).then(received => setCat(received));
@@ -50,7 +50,11 @@ function CatDetails() {
 
     getIdTokenClaims().then(token => {
       if (token) {
-        updateCat(parseInt(id), { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight }, token.__raw)
+        updateCat(
+          parseInt(id),
+          { id: cat.id, name: nameInput, age: cat.age, weight: cat.weight, cuteness: cat.cuteness, ownerId: cat.ownerId, avatarUrl: cat.avatarUrl },
+          token.__raw
+        )
           .then(() => {
             getCatById(parseInt(id)).then(received => setCat(received));
           });
@@ -71,7 +75,11 @@ function CatDetails() {
 
     getIdTokenClaims().then(token => {
       if (token)
-        updateCat(parseInt(id), { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight }, token.__raw);
+        updateCat(
+          parseInt(id),
+          { id: cat.id, name: cat.name, age: ageInput, weight: cat.weight, cuteness: cat.cuteness, ownerId: cat.ownerId, avatarUrl: cat.avatarUrl },
+          token.__raw
+        );
     });
     getCatById(parseInt(id)).then(received => setCat(received));
   };
@@ -89,7 +97,11 @@ function CatDetails() {
 
     getIdTokenClaims().then(token => {
       if (token)
-        updateCat(parseInt(id), { id: cat.id, name: cat.name, age: cat.age, weight: weightInput }, token.__raw);
+        updateCat(
+          parseInt(id),
+          { id: cat.id, name: cat.name, age: cat.age, weight: weightInput, cuteness: cat.cuteness, ownerId: cat.ownerId, avatarUrl: cat.avatarUrl },
+          token.__raw
+        );
     });
 
     getCatById(parseInt(id)).then(received => setCat(received));

@@ -35,8 +35,50 @@
 
 .card {
   padding: 2em;
+  margin: 0 auto;
+  max-width: 345px;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.screensaver-active body {
+  background-color: black !important;
+}
+
+.carousel .slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel .slide img {
+  max-height: 140px;
+  object-fit: cover;
+}
+
+.carousel .carousel-slider {
+  overflow: visible;
+}
+
+.carousel .control-arrow {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 18px;
+  padding: 10px 20px;
+  z-index: 2;
 }

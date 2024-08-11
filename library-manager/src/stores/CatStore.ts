@@ -4,9 +4,12 @@ import {
     makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall,
     makeGetUsersFavoriteBreedCall, makeUpdateCall, makeGetUserRoleNameCall, makeGetAllUsersCall,
     makeGetOthersRoleNameCall, makeAddUserCall, makeDeleteUserCall, makeUpdateUserRoleCall,
-    makeUpdateUserNameCall, makeAgeDistributionCall
+    makeUpdateUserNameCall, makeAgeDistributionCall, makeGetUserMoneyCall, makeGetMyCatsCall,
+    makeBuyCatCall, makeProcessBoughtMoneyCall, makeUpdateCatCuteness, makeGetQuizQuestionsCall,
+    makeGetLeaderbordCall, makeSetCatAvatarCall, makeGetMyCutestCatCall
 } from "../api/CatsApi";
 import { User, UserToBeCreated } from "../domain/User";
+import { CatQuizQuestion } from "../components/cats/OwnedCatDetails";
 
 let lastFetchedPage = 0;
 let lastSortDirection = "asc";
@@ -34,6 +37,11 @@ export interface AgeAndCount {
     count: number
 }
 
+export interface UserNameTotalCutenessPair {
+    userName: string,
+    totalCuteness: number
+}
+
 interface useCatStoreProps {
     catsOnPage: Cat[],
     fetch: (sortByNameDirection: string, page: number) => void,
@@ -54,7 +62,16 @@ interface useCatStoreProps {
     updateUserRole: (userId: string, newRole: string, token: string) => void,
     updateUserName: (userId: string, newName: string, token: string) => void,
     ageDistribution: AgeAndCount[],
-    fetchAgeDistribution: () => void
+    fetchAgeDistribution: () => void,
+    getUserMoney: (token: string) => Promise<number>,
+    getMyCats: (token: string) => Promise<Cat[]>,
+    buyCat: (catId: number, token: string) => void,
+    processBoughtMoney: (token: string) => void,
+    updateCatCuteness: (catId: number, newCuteness: number) => Promise<Boolean>,
+    getQuizQuestions: () => Promise<CatQuizQuestion[]>,
+    getLeaderboard: () => Promise<UserNameTotalCutenessPair[]>,
+    setCatAvatar: (catId: number, prompt: string, token: string) => Promise<string>,
+    getMyCutestCat: (token: string) => Promise<Cat>
 }
 
 
@@ -73,7 +90,10 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
                 case updateOperationCode:
                     get().updateCat(
                         operation.id,
-                        { id: operation.id, name: operation.cat.name, age: operation.cat.age, weight: operation.cat.weight },
+                        {
+                            id: operation.id, name: operation.cat.name, age: operation.cat.age, weight: operation.cat.weight,
+                            cuteness: operation.cat.cuteness, ownerId: operation.cat.ownerId, avatarUrl: operation.cat.avatarUrl
+                        },
                         operation.token
                     );
                     break;
@@ -213,5 +233,40 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
                 }
             });
         },
+        getUserMoney: (token) => {
+            return makeGetUserMoneyCall(token);
+        },
+        getMyCats: async (token) => {
+            console.log('in store, token=' + token);
+            return makeGetMyCatsCall(token);
+        },
+        buyCat: async (catId, token) => {
+            console.log('store buy cat');
+            return makeBuyCatCall(catId, token);
+        },
+        processBoughtMoney: async (token) => {
+            console.log('store process bought money');
+            return makeProcessBoughtMoneyCall(token);
+        },
+        updateCatCuteness: async (catId, newCuteness) => {
+            console.log(`store update cuteness: ${catId}, ${newCuteness}`);
+            return makeUpdateCatCuteness(catId, newCuteness);
+        },
+        getQuizQuestions: async () => {
+            const questions = makeGetQuizQuestionsCall();
+            console.log('store got these questions: ' + JSON.stringify(questions));
+            return questions;
+        },
+        getLeaderboard: async () => {
+            return makeGetLeaderbordCall();
+        },
+        setCatAvatar: async (catId, prompt, token) => {
+            console.log(`setcatavatar: id=${catId}, prompt=${prompt}, token=${token}`);
+            return makeSetCatAvatarCall(catId, prompt, token);
+        },
+        getMyCutestCat: async (token) => {
+            // return { id: 1, name: 'test', age: 5, weight: 5, cuteness: 70, ownerId: 'aa' };
+            return makeGetMyCutestCatCall(token);
+        }
     }
 });

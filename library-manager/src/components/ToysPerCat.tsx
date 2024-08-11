@@ -1,6 +1,7 @@
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
 import { CatNumberPair, useCatStore } from "../stores/CatStore";
+import SillyLoading from "./utilities/SillyLoading";
 
 function ToysPerCat() {
     const { getToysPerCat } = useCatStore();
@@ -35,24 +36,30 @@ function ToysPerCat() {
     return (
         <Box>
             <TableContainer data-testid="toys-per-cat-table">
-                <Table sx={{ minWidth: "50%" }}>
-                    <TableHead >
-                        <TableRow>
-                            <TableCell sx={{ fontWeight: 800, }}>Cat Name</TableCell>
-                            <TableCell sx={{ fontWeight: 800, }}>Number of Toys</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {toysPerCat.slice(0, countToShow).map(({ cat, theNumber }) => (
-                            <TableRow key={cat.id}>
-                                <TableCell sx={{ fontStyle: 'italic' }}>
-                                    {cat.name}
-                                </TableCell>
-                                <TableCell>{theNumber}</TableCell>
+                {toysPerCat.length > 0 ?
+                    (<Table sx={{ minWidth: "50%" }}>
+                        <TableHead >
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: 800, }}>Cat Name</TableCell>
+                                <TableCell sx={{ fontWeight: 800, }}>Number of Toys</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {toysPerCat.slice(0, countToShow).map(({ cat, theNumber }) => (
+                                <TableRow key={cat.id}>
+                                    <TableCell sx={{ fontStyle: 'italic' }}>
+                                        {cat.name}
+                                    </TableCell>
+                                    <TableCell>{theNumber}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>)
+                    :
+                    (
+                        <SillyLoading />
+                    )
+                }
             </TableContainer>
         </Box>
     );
