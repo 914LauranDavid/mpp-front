@@ -14,7 +14,7 @@ function SillyLoading() {
         >
             <Typography
                 variant="h4"
-                sx={{ mb: 2 }} // margin bottom
+                sx={{ mb: 2 }} 
             >
                 🐱
             </Typography>

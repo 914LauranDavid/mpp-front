@@ -1,13 +1,17 @@
 import { Box, Typography } from "@mui/material";
 import { useCatStore } from "./stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
+import { FormEvent, useRef } from "react";
 
 const BuyMoney = () => {
     const { user, getIdTokenClaims } = useAuth0();
     const { processBoughtMoney } = useCatStore();
+    const formRef = useRef<HTMLFormElement>(null);
 
 
-    const handleBuySubmit = () => {
+    const handleBuySubmit = (e: FormEvent) => {
+        e.preventDefault();
+
         if (user?.sub) {
             getIdTokenClaims().then(token => {
                 console.log('token: ' + token);
@@ -16,7 +20,17 @@ const BuyMoney = () => {
                 }
             });
         }
+
+        if (formRef.current) {
+            formRef.current.submit();
+        }
     }
+
+    // useEffect(() => {
+    //     const buyForm = document.getElementById("buy-form");
+    //     if (buyForm != null)
+    //         buyForm.addEventListener('submit', handleBuySubmit);
+    // })
 
     return (
         <Box sx={{
@@ -37,7 +51,7 @@ const BuyMoney = () => {
             <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
                 Buy 🐾50
             </Typography>
-            <form onSubmit={handleBuySubmit} action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+            <form ref={formRef} action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" id="buy-form" onSubmit={handleBuySubmit}>
                 <input type="hidden" name="cmd" value="_s-xclick" />
                 <input type="hidden" name="hosted_button_id" value="DG74KH3RS6Z98" />
                 <input type="hidden" name="currency_code" value="USD" />

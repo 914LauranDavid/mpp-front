@@ -6,9 +6,8 @@ import { RawUser, UserToBeCreated } from "../domain/User";
 import { CatQuizQuestion } from "../components/cats/OwnedCatDetails";
 
 // const baseBackendUrl = "http://localhost:3000/";
-// const baseBackendUrl = "https://localhost:4443/";
-// const baseBackendUrl = "https://cat-app-backend-7a809be297e0.herokuapp.com/";
-const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
+const baseBackendUrl = "https://localhost:4443/";
+// const baseBackendUrl = "https://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:4443/";
 // const baseBackendUrl = "http://ec2-13-49-120-237.eu-north-1.compute.amazonaws.com:3000/";
 
 export const makeAllCall = (sortByNameDirection: string, page: number) => {
@@ -195,7 +194,7 @@ export const makeAgeDistributionCall = () => {
 }
 
 export const makeGetMyCatsCall = (token: string) => {
-    console.log('in catsapi, token=' + token);
+    console.log('in catsapi, getMyCats');
     return axios
         .get(baseBackendUrl + "cats/mine", getRequestConfigWithToken(token))
         .then(({ data }) => {
@@ -240,11 +239,6 @@ export const makeGetQuizQuestionsCall = () => {
                 questions.push({ question: oneGivenQuestion.question, options: oneGivenQuestion.options, answer: oneGivenQuestion.answer })
 
             return questions;
-
-            // const questions: CatQuizQuestion[] = [];
-            // data.fore
-
-            // return data as CatQuizQuestion[];
         })
         .catch((error) => {
             console.log("Error getting quiz questions: " + error);
@@ -266,7 +260,7 @@ export const makeGetLeaderbordCall = () => {
 }
 
 export const makeSetCatAvatarCall = (catId: number, prompt: string, token: string) => {
-    console.log(`makeSetCatAvatarCall: id=${catId}, prompt=${prompt}, token=${token}`);
+    console.log(`makeSetCatAvatarCall: id=${catId}, prompt=${prompt}`);
     return axios.post(baseBackendUrl + "cats/set-avatar", { catId: catId, prompt: prompt }, getRequestConfigWithToken(token))
         .then(({ data }) => {
             console.log('set avatar response: ' + JSON.stringify(data));

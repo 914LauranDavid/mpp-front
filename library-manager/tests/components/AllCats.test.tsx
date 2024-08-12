@@ -65,7 +65,7 @@ describe('AllCats', () => {
         expect(screen.getByText('Andrei')).toBeInTheDocument();
         expect(screen.getByText('Ionut')).toBeInTheDocument();
 
-        expect(screen.queryByText('2.354')).not.toBeInTheDocument();  // weight does not appear
+        expect(screen.queryByText('2.354')).not.toBeInTheDocument();  
     });
 
     it('calls deleteCat when pressing delete', async () => {

@@ -137,7 +137,7 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeGetByIdCall(id);
         },
         addCat: (newCat: CatWithoutId, token: string) => {
-            console.log('store token=' + JSON.stringify(token));
+            console.log('entered store addCat');
             makeAddCall(newCat, token).then((response) => {
                 if (response === undefined) {
                     pendingOperations.push({ type: addOperationCode, id: 0, cat: newCat, token: token });
@@ -151,7 +151,6 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             makeDeleteCall(id, token).then((response) => {
                 if (response === undefined || response.code === "ERR_NETWORK") {
                     console.log('will add delete to pending. response: ' + JSON.stringify(response));
-                    console.log('will add delete to pending. response status: ' + JSON.stringify(response["status"]));
 
                     pendingOperations.push({ type: deleteOperationCode, id: id, cat: errorCat, token: token });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
@@ -202,19 +201,15 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return allUsers;
         },
         addUser: (user, token) => {
-            console.log('store token=' + JSON.stringify(token));
             makeAddUserCall(user, token);
         },
         deleteUser: (userId, token) => {
-            console.log('store token=' + JSON.stringify(token));
             makeDeleteUserCall(userId, token);
         },
         updateUserRole: (userId, newRole, token) => {
-            console.log('store token=' + JSON.stringify(token));
             makeUpdateUserRoleCall(userId, newRole, token);
         },
         updateUserName: (userId, newName, token) => {
-            console.log('store token=' + JSON.stringify(token));
             makeUpdateUserNameCall(userId, newName, token);
         },
         ageDistribution: [],
@@ -237,7 +232,6 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeGetUserMoneyCall(token);
         },
         getMyCats: async (token) => {
-            console.log('in store, token=' + token);
             return makeGetMyCatsCall(token);
         },
         buyCat: async (catId, token) => {
@@ -261,7 +255,7 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeGetLeaderbordCall();
         },
         setCatAvatar: async (catId, prompt, token) => {
-            console.log(`setcatavatar: id=${catId}, prompt=${prompt}, token=${token}`);
+            console.log(`setcatavatar: id=${catId}, prompt=${prompt}`);
             return makeSetCatAvatarCall(catId, prompt, token);
         },
         getMyCutestCat: async (token) => {

@@ -19,7 +19,6 @@ const UserProfile = () => {
             let userId = user?.sub;
 
             getIdTokenClaims().then(token => {
-                console.log('token: ' + token);
                 if (token) {
                     getUsersFavoriteBreed(userId.substring(6, userId.length), token.__raw).then(received => setFavoriteBreed(received));
                     getUserRoleName(token.__raw).then(received => setUserRoleName(received));
