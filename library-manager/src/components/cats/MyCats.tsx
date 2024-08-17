@@ -30,7 +30,7 @@ function CatsTable() {
     const isMd = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
-        console.log('will get claims');
+        console.log('will get token claims');
 
         getIdTokenClaims().then(tokenClaims => {
             if (tokenClaims !== undefined) {

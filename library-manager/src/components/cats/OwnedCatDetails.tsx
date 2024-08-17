@@ -48,7 +48,7 @@ function OwnedCatDetails() {
     const id = params.id;
 
     if (!id) {
-        console.log("params incorrect...");
+        console.log("params incorrect");
         return <h1>The parameters are incorrect</h1>;
     }
 
@@ -61,11 +61,11 @@ function OwnedCatDetails() {
     const fetchQuestions = async () => {
         try {
             const generatedQuestions = await getQuizQuestions();
-            console.log('ownedcatdetails got the questions: ' + JSON.stringify(generatedQuestions));
+            console.log('ownedcatdetails received these questions: ' + JSON.stringify(generatedQuestions));
             setQuestions(generatedQuestions);
             setAnswers(Array(generatedQuestions.length).fill(""));
         } catch (error) {
-            console.error('Error fetching questions:', error);
+            console.error('Error fetching questions: ', error);
         }
     };
 
@@ -76,12 +76,7 @@ function OwnedCatDetails() {
     };
 
     const handleSubmitQuiz = () => {
-        let correctCount = 0;
-        for (let i = 0; i < questions.length; i++) {
-            if (answers[i] === questions[i].answer) {
-                correctCount++;
-            }
-        }
+        let correctCount = computeCorrectCount();
         setCorrectAnswersCount(correctCount);
         updateCatCuteness(cat.id, cat.cuteness + correctCount).then(() => {
             getCatById(parseInt(id)).then(received => setCat(received));
@@ -90,6 +85,16 @@ function OwnedCatDetails() {
         setOpen(false);
         setFeedbackOpen(true);
     };
+
+    const computeCorrectCount = () => {
+        let correctCount = 0;
+        for (let i = 0; i < questions.length; i++) {
+            if (answers[i] === questions[i].answer) {
+                correctCount++;
+            }
+        }
+        return correctCount;
+    }
 
     const handleShowQuiz = () => {
         setQuestions([]);
@@ -180,7 +185,7 @@ function OwnedCatDetails() {
                                                         {avatarResponse}
                                                     </Typography>
                                                     <Typography variant="body1" sx={{ mt: 1, color: 'gray' }}>
-                                                        Generated with <a href="https://cat-avatars.vercel.app/">Cat Avatar Generator</a> <br/>
+                                                        Generated with <a href="https://cat-avatars.vercel.app/">Cat Avatar Generator</a> <br />
                                                         and OpenAI API
                                                     </Typography>
                                                 </Box>
@@ -227,7 +232,7 @@ function OwnedCatDetails() {
                 </DialogTitle>
                 <DialogContent
                     sx={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
                         padding: '16px',
                     }}
                 >
@@ -281,7 +286,7 @@ function OwnedCatDetails() {
                 <DialogTitle sx={{ fontWeight: 'bold', color: 'pink' }}>The right answers</DialogTitle>
                 <DialogContent
                     sx={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
                         padding: '16px',
                     }}
                 >

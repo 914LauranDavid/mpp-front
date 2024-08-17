@@ -3,6 +3,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
 import { useCatStore } from "../../stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
+import { REGULAR_USER_ROLE_NAME } from "../../utils/Constants";
 
 function AddUser() {
     const { getIdTokenClaims } = useAuth0();
@@ -10,7 +11,7 @@ function AddUser() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("Regular User");
+    const [role, setRole] = useState(REGULAR_USER_ROLE_NAME);
 
     const { addUser } = useCatStore();
 

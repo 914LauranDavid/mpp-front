@@ -10,4 +10,4 @@ export interface Cat {
 
 export interface CatWithoutId { name: string, age: number, weight: number, cuteness: number, ownerId: string, avatarUrl: string };
 
-export const errorCat: Cat = { id: -1, name: "Error", age: -1, weight: -1, cuteness: -1, ownerId: "error", avatarUrl: "error" };
+export const ERROR_CAT: Cat = { id: -1, name: "Error", age: -1, weight: -1, cuteness: -1, ownerId: "error", avatarUrl: "error" };

@@ -21,6 +21,7 @@ import AddUser from "./AddUser";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import SillyLoading from "../utilities/SillyLoading";
+import { ADMIN_USER_ROLE_NAME, MANAGER_USER_ROLE_NAME, REGULAR_USER_ROLE_NAME } from "../../utils/Constants";
 
 
 function UsersTable() {
@@ -56,7 +57,7 @@ function UsersTable() {
             if (tokenClaims)
                 getAllUsers(tokenClaims?.__raw).then(receivedUsers => {
                     setAllUsers(receivedUsers);
-                    console.log('received these uers: ' + JSON.stringify(receivedUsers));
+                    console.log('received these users: ' + JSON.stringify(receivedUsers));
                 }
                 );
         });
@@ -125,15 +126,6 @@ function UsersTable() {
                                         <TableCell>
                                             {user.role}
                                             <form onSubmit={(e) => { e.preventDefault(); handleNewRoleSubmit(user.id, roleInput[userIndex]); }}>
-                                                {/* <TextField
-                                            size="small"
-                                            id={"roleInput" + userIndex}
-                                            value={roleInput[userIndex]}
-                                            onChange={(e) => handleRoleInputChange(userIndex, e.target.value)}
-                                        />
-                                        <Button type="submit" aria-label="submitName">
-                                            <CheckCircleOutlineIcon sx={{ cursor: 'pointer' }} />
-                                        </Button> */}
                                                 <Select
                                                     labelId={`role-select-label-${user.id}`}
                                                     id={`role-select-${user.id}`}
@@ -141,9 +133,9 @@ function UsersTable() {
                                                     value={user.role}
                                                     onChange={(e) => handleNewRoleSubmit(user.id, e.target.value as string)}
                                                 >
-                                                    <MenuItem value="Admin">Admin</MenuItem>
-                                                    <MenuItem value="Manager">Manager</MenuItem>
-                                                    <MenuItem value="Regular User">Regular User</MenuItem>
+                                                    <MenuItem value={ADMIN_USER_ROLE_NAME}>{ADMIN_USER_ROLE_NAME}</MenuItem>
+                                                    <MenuItem value={MANAGER_USER_ROLE_NAME}>{MANAGER_USER_ROLE_NAME}</MenuItem>
+                                                    <MenuItem value={REGULAR_USER_ROLE_NAME}>{REGULAR_USER_ROLE_NAME}</MenuItem>
                                                 </Select>
                                             </form>
                                         </TableCell>

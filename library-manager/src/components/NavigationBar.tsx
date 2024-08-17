@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCatStore } from "../stores/CatStore";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { ADMIN_USER_ROLE_NAME, MANAGER_USER_ROLE_NAME } from "../utils/Constants";
 
 interface NavigationBarProps {
     onToggleScreensaver: () => void;
@@ -25,8 +26,8 @@ function NavigationBar({ onToggleScreensaver }: NavigationBarProps) {
                 const token = tokenClaims.__raw;
 
                 getUserRoleName(token).then(roleName => {
-                    setIsManagerOrAdmin(roleName === "Manager" || roleName === "Admin");
-                    setIsAdmin(roleName === "Admin");
+                    setIsManagerOrAdmin(roleName === MANAGER_USER_ROLE_NAME || roleName === ADMIN_USER_ROLE_NAME);
+                    setIsAdmin(roleName === ADMIN_USER_ROLE_NAME);
                 });
 
                 getUserMoney(token).then(received => setMoneyAmount(received));

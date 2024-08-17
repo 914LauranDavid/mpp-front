@@ -26,12 +26,6 @@ const BuyMoney = () => {
         }
     }
 
-    // useEffect(() => {
-    //     const buyForm = document.getElementById("buy-form");
-    //     if (buyForm != null)
-    //         buyForm.addEventListener('submit', handleBuySubmit);
-    // })
-
     return (
         <Box sx={{
             display: 'flex',

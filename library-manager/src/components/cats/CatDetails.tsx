@@ -5,6 +5,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import { useCatStore } from "../../stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
+import { ADMIN_USER_ROLE_NAME, MANAGER_USER_ROLE_NAME } from "../../utils/Constants";
 
 function CatDetails() {
   const { user, getIdTokenClaims } = useAuth0();
@@ -19,7 +20,9 @@ function CatDetails() {
       if (tokenClaims !== undefined) {
         const token = tokenClaims.__raw;
 
-        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(roleName === "Manager" || roleName === "Admin"));
+        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(
+          roleName === MANAGER_USER_ROLE_NAME || roleName === ADMIN_USER_ROLE_NAME
+        ));
       };
     });
   }, [user]);
@@ -29,7 +32,7 @@ function CatDetails() {
   const id = params.id;
 
   if (!id) {
-    console.log("params incorrect...");
+    console.log("params incorrect");
     return <h1>The parameters are incorrect</h1>;
   }
 

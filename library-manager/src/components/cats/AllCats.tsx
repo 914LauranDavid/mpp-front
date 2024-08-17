@@ -17,6 +17,10 @@ import { useEffect, useState } from "react";
 import { useCatStore } from "../../stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
 import SillyLoading from "../utilities/SillyLoading";
+import { ADMIN_USER_ROLE_NAME, MANAGER_USER_ROLE_NAME } from "../../utils/Constants";
+
+const ASCENDING_SORT_DIRECTION = "asc";
+const DESCENDING_SORT_DIRECTION = "desc";
 
 function CatsTable() {
   const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
@@ -30,14 +34,16 @@ function CatsTable() {
       if (tokenClaims !== undefined) {
         const token = tokenClaims.__raw;
 
-        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(roleName === "Manager" || roleName === "Admin"));
+        getUserRoleName(token).then(roleName => setIsManagerOrAdmin(
+          roleName === MANAGER_USER_ROLE_NAME || roleName === ADMIN_USER_ROLE_NAME
+        ));
       };
     });
   }, [user]);
 
   const pageSize = 5;
 
-  const [sortByNameDirection, setSortByNameDirection] = useState("asc");
+  const [sortByNameDirection, setSortByNameDirection] = useState(ASCENDING_SORT_DIRECTION);
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalCount, setTotalCount] = useState(0);
@@ -50,10 +56,10 @@ function CatsTable() {
   }, [sortByNameDirection, currentPage]);
 
   const handleSortByNameClick = () => {
-    if (sortByNameDirection === "desc")
-      setSortByNameDirection("asc");
+    if (sortByNameDirection === DESCENDING_SORT_DIRECTION)
+      setSortByNameDirection(ASCENDING_SORT_DIRECTION);
     else
-      setSortByNameDirection("desc");
+      setSortByNameDirection(DESCENDING_SORT_DIRECTION);
   }
 
   const handleOnClickPrev = () => {
@@ -65,7 +71,7 @@ function CatsTable() {
   }
 
   const getSortByNameButtonOrderUiText = () => {
-    if (sortByNameDirection === "desc")
+    if (sortByNameDirection === DESCENDING_SORT_DIRECTION)
       return " increasingly ";
     else
       return " decreasingly ";

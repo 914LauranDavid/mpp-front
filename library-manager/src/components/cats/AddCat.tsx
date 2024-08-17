@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useCatStore } from "../../stores/CatStore";
 import { useAuth0 } from "@auth0/auth0-react";
 
+const CAT_INITIAL_CUTENESS = 5;
+
 function AddCat() {
   const { getIdTokenClaims } = useAuth0();
 
@@ -22,7 +24,7 @@ function AddCat() {
 
     getIdTokenClaims().then(token => {
       if (token)
-        addCat({ name: name, age: age, weight: weight, cuteness: 5, ownerId: "", avatarUrl: "" }, token.__raw);
+        addCat({ name: name, age: age, weight: weight, cuteness: CAT_INITIAL_CUTENESS, ownerId: "", avatarUrl: "" }, token.__raw);
     });
   };
 

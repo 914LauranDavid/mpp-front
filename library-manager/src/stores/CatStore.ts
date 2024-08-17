@@ -1,4 +1,4 @@
-import { Cat, CatWithoutId, errorCat } from "../domain/Cat";
+import { Cat, CatWithoutId, ERROR_CAT } from "../domain/Cat";
 import { create } from "zustand";
 import {
     makeAddCall, makeAllCall, makeCountCall, makeDeleteCall, makeGetByIdCall, makeGetToysPerCatCall,
@@ -10,6 +10,7 @@ import {
 } from "../api/CatsApi";
 import { User, UserToBeCreated } from "../domain/User";
 import { CatQuizQuestion } from "../components/cats/OwnedCatDetails";
+import { AUTH0_USER_ID_PREFIX_LENGTH } from "../utils/Constants";
 
 let lastFetchedPage = 0;
 let lastSortDirection = "asc";
@@ -17,9 +18,9 @@ let pendingOperations: UserOperation[] = [];
 
 let cachedCats: Cat[] = [];
 
-let addOperationCode = 1;
-let updateOperationCode = 2;
-let deleteOperationCode = 3;
+const addOperationCode = 1;
+const updateOperationCode = 2;
+const deleteOperationCode = 3;
 interface UserOperation {
     type: number,
     id: number,
@@ -77,7 +78,7 @@ interface useCatStoreProps {
 
 export const useCatStore = create<useCatStoreProps>((set, get) => {
     const processPendingOperations = () => {
-        console.log('will process the pending operations now');
+        console.log('will process the pending operations');
 
         let pendingOperationsCopy: UserOperation[] = JSON.parse(JSON.stringify(pendingOperations));
         pendingOperations = [];
@@ -116,7 +117,7 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeAllCall(sortByNameDirection, page).then(result => {
                 set(() => ({ catsOnPage: result }));
 
-                if (result.length === 1 && result[0] === errorCat) {
+                if (result.length === 1 && result[0] === ERROR_CAT) {
                     console.log(`catStore: makeAll returned error`);
                     set(({ isServerDown: true }));
                     set(() => ({ catsOnPage: cachedCats }));
@@ -152,13 +153,13 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
                 if (response === undefined || response.code === "ERR_NETWORK") {
                     console.log('will add delete to pending. response: ' + JSON.stringify(response));
 
-                    pendingOperations.push({ type: deleteOperationCode, id: id, cat: errorCat, token: token });
+                    pendingOperations.push({ type: deleteOperationCode, id: id, cat: ERROR_CAT, token: token });
                     console.log('pending operations: ' + JSON.stringify(pendingOperations));
                 } else if (response.code === "ERR_BAD_REQUEST") {
-                    alert('You wont delete this cat, she/he has toys');
+                    alert('You won\'t delete this cat, they have toys');
                 }
                 else {
-                    console.log('deleted response: ' + JSON.stringify(response));
+                    console.log('delete response: ' + JSON.stringify(response));
                 }
 
                 get().fetch(lastSortDirection, lastFetchedPage);
@@ -194,7 +195,9 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             const allUsers = [];
 
             for (let rawUser of allUsersRaw) {
-                const roleName = await makeGetOthersRoleNameCall(rawUser.user_id.substring(6, rawUser.user_id.length), token);
+                const roleName = await makeGetOthersRoleNameCall(
+                    rawUser.user_id.substring(AUTH0_USER_ID_PREFIX_LENGTH, rawUser.user_id.length), token
+                );
                 allUsers.push({ name: rawUser.name, email: rawUser.email, role: roleName, id: rawUser.user_id });
             }
 
@@ -217,13 +220,11 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeAgeDistributionCall().then(result => {
                 set(() => ({ ageDistribution: result }));
 
-                if (result.length === 1 && result[0] === errorCat) {
+                if (result.length === 1 && result[0] === ERROR_CAT) {
                     console.log(`catStore: makeAgeDistributionCall returned error`);
                     set(({ isServerDown: true }));
-                    // set(() => ({ catsOnPage: cachedCats }));
                 } else {
                     set(({ isServerDown: false }));
-                    // cachedCats = JSON.parse(JSON.stringify(result));
                     processPendingOperations();
                 }
             });
@@ -243,12 +244,12 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeProcessBoughtMoneyCall(token);
         },
         updateCatCuteness: async (catId, newCuteness) => {
-            console.log(`store update cuteness: ${catId}, ${newCuteness}`);
+            console.log(`store update cuteness: cat id=${catId}, new cuteness=${newCuteness}`);
             return makeUpdateCatCuteness(catId, newCuteness);
         },
         getQuizQuestions: async () => {
             const questions = makeGetQuizQuestionsCall();
-            console.log('store got these questions: ' + JSON.stringify(questions));
+            console.log('store received these questions: ' + JSON.stringify(questions));
             return questions;
         },
         getLeaderboard: async () => {
@@ -259,7 +260,6 @@ export const useCatStore = create<useCatStoreProps>((set, get) => {
             return makeSetCatAvatarCall(catId, prompt, token);
         },
         getMyCutestCat: async (token) => {
-            // return { id: 1, name: 'test', age: 5, weight: 5, cuteness: 70, ownerId: 'aa' };
             return makeGetMyCutestCatCall(token);
         }
     }
