@@ -44,7 +44,7 @@ describe('if admin', () => {
             render(<BrowserRouter><NavigationBar /></BrowserRouter>); 
         });
 
-        expect(screen.getByText('CatApp')).toBeInTheDocument();
+        expect(screen.getByText('CatAdv.')).toBeInTheDocument();
         expect(screen.getByText('All cats')).toBeInTheDocument();
         expect(screen.getByText('Add a new cat')).toBeInTheDocument();
     });

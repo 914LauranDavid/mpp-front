@@ -26,7 +26,7 @@ function CatsTable() {
   const { user, isAuthenticated, getIdTokenClaims } = useAuth0();
   const { catsOnPage, getCount, deleteCat, fetch, getUserRoleName, buyCat } = useCatStore();
   const [isManagerOrAdmin, setIsManagerOrAdmin] = useState(false);
-
+  
   useEffect(() => {
     console.log('will get claims');
 

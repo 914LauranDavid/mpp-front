@@ -52,7 +52,7 @@ function NavigationBar({ onToggleScreensaver }: NavigationBarProps) {
                             color: 'white'
                         }}
                     >
-                        CatApp
+                        CatAdv.
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

@@ -146,6 +146,7 @@ function MyCats() {
         <Box sx={{ bgcolor: '#f8faca' }}>
             <CatsTable />
             <Divider />
+            Artwork by <a href="https://cat-avatars.vercel.app/">David Revoy</a>, licensed under CC BY 4.0
         </Box>
     );
 }
